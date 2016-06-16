@@ -15,32 +15,48 @@ namespace Pandorum
         private HttpClient _httpClient;
 
         public PandoraClient()
-            : this(useHttps: true) // TODO: Which one is better?
+            : this(useHttps: true) // TODO: Which one is better? HTTP or HTTPS?
         {
         }
 
         public PandoraClient(bool useHttps)
-            // TODO: Which one is better?
-            : this(useHttps ? PandoraEndpoints.TunerHttps : PandoraEndpoints.TunerHttp)
+            // TODO: Which one is better? Internal or non-internal?
+            : this(useHttps ?
+                  PandoraEndpoints.TunerHttps :
+                  PandoraEndpoints.TunerHttp)
         {
         }
 
         public PandoraClient(string endpoint)
+            : this(endpoint, new HttpClient())
+        {
+        }
+
+        public PandoraClient(string endpoint, HttpClient baseClient)
         {
             _endpoint = endpoint;
-            _httpClient = new HttpClient();
+            _httpClient = baseClient;
         }
 
         // API functionality
 
-        public async Task<bool> CheckLicensing()
+        public Task<bool> CheckLicensing()
         {
-            var response = await GetResponseObject("method", "test.checkLicensing");
-            CheckStatus(response);
-            return (bool)response["result"]["isAllowed"];
+            var uri = new PandoraUriBuilder()
+                .WithMethod("test.checkLicensing")
+                .ToString();
+            return GetJsonAndMap(uri,
+                obj => (bool)obj["result"]["isAllowed"]);
         }
 
-        protected void CheckStatus(JObject response)
+        private async Task<T> GetJsonAndMap<T>(string uri, Func<JObject, T> func)
+        {
+            var response = await _httpClient.GetJsonAsync(uri).ConfigureAwait(false);
+            CheckStatus(response);
+            return func(response);
+        }
+
+        private static void CheckStatus(JObject response)
         {
             var status = (string)response["stat"];
             if (status != "ok")
@@ -60,7 +76,8 @@ namespace Pandorum
                     _httpClient.Dispose();
                     _httpClient = null;
                 }
-                if (_endpoint != null) _endpoint = null;
+                if (_endpoint != null)
+                    _endpoint = null;
             }
         }
     }
