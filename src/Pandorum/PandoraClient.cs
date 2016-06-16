@@ -46,24 +46,6 @@ namespace Pandorum
             if (status != "ok")
                 throw new PandoraStatusException();
         }
-
-        // Request logic
-
-        // TODO: Move to QueryBuilder class?
-        private string BuildUri(params string[] parameters)
-        {
-            if (parameters.Length % 2 != 0)
-                throw new ArgumentException("The query parameters should have an even number of key/values.", nameof(parameters));
-
-            var builder = new QueryBuilder();
-            for (int i = 0; i < parameters.Length; i += 2)
-            {
-                string key = parameters[i];
-                string value = parameters[i + 1];
-                builder.Add(key, value);
-            }
-            return _endpoint + builder.ToString();
-        }
         
         // Dispose logic
 

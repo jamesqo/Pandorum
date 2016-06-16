@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.Net
 {
-    internal static class HttpClientExtensions
+    public static class HttpClientExtensions
     {
         public async static Task<JObject> GetJsonAsync(this HttpClient client, string requestUri)
         {
             return JObject.Parse(await client.GetStringAsync(requestUri).ConfigureAwait(false));
         }
 
-        public static Task<string> PostAsyncAsString(this HttpClient client, string requestUri, HttpContent content)
+        public static Task<string> PostAndReadStringAsync(this HttpClient client, string requestUri, HttpContent content)
         {
             return AwaitAndReadAs(client.PostAsync(requestUri, content), c => c.ReadAsStringAsync());
         }

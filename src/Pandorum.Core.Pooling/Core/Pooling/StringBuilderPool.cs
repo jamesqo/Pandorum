@@ -14,7 +14,7 @@ namespace Pandorum.Core.Pooling
 
         public static StringBuilderPool Default { get; } = new StringBuilderPool();
 
-        private int _maxOrStoredCount;
+        private int _maxOrStoreCount;
         private StringBuilder[] _store;
         private readonly int _maxBufferSize;
 
@@ -28,7 +28,7 @@ namespace Pandorum.Core.Pooling
             if (maxBuffers <= 0 || maxBufferSize <= 0)
                 throw new ArgumentOutOfRangeException(maxBuffers <= 0 ? nameof(maxBuffers) : nameof(maxBufferSize));
 
-            _maxOrStoredCount = maxBuffers;
+            _maxOrStoreCount = maxBuffers;
             _maxBufferSize = maxBufferSize;
         }
 
@@ -38,18 +38,18 @@ namespace Pandorum.Core.Pooling
                 InitializeStore();
             else
             {
-                for (int i = 0; i < _maxOrStoredCount; i++)
+                for (int i = 0; i < _maxOrStoreCount; i++)
                 {
                     var builder = _store[i];
                     if (builder.Capacity >= minCapacity)
                     {
                         // Found one
-                        _maxOrStoredCount--;
+                        _maxOrStoreCount--;
 
                         // Remove it from the array
-                        if (i != _maxOrStoredCount)
-                            Array.Copy(_store, i + 1, _store, i, _maxOrStoredCount - i);
-                        _store[_maxOrStoredCount] = null;
+                        if (i != _maxOrStoreCount)
+                            Array.Copy(_store, i + 1, _store, i, _maxOrStoreCount - i);
+                        _store[_maxOrStoreCount] = null;
 
                         if (clear)
                             builder.Clear();
@@ -74,20 +74,20 @@ namespace Pandorum.Core.Pooling
 
             if (builder.Capacity > _maxBufferSize) return;
             if (_store == null) InitializeStore();
-            else if (_maxOrStoredCount == _store.Length) return;
+            else if (_maxOrStoreCount == _store.Length) return;
 
-            Debug.Assert(_maxOrStoredCount < _store.Length);
-            Debug.Assert(_store[_maxOrStoredCount] == null);
+            Debug.Assert(_maxOrStoreCount < _store.Length);
+            Debug.Assert(_store[_maxOrStoreCount] == null);
 
-            _store[_maxOrStoredCount++] = builder;
+            _store[_maxOrStoreCount++] = builder;
         }
 
         private void InitializeStore()
         {
             Debug.Assert(_store == null);
 
-            _store = new StringBuilder[_maxOrStoredCount];
-            _maxOrStoredCount = 0;
+            _store = new StringBuilder[_maxOrStoreCount];
+            _maxOrStoreCount = 0;
         }
     }
 }
