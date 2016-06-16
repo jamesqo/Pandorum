@@ -32,35 +32,39 @@ namespace Pandorum.Core.Pooling
             _maxBufferSize = maxBufferSize;
         }
 
-        public StringBuilder Borrow(int minimumCapacity = 16, bool clear = true)
+        public StringBuilder Borrow(int minCapacity = 16, bool clear = true)
         {
-            if (EnsureStoreInitialized())
+            if (_store == null)
+                InitializeStore();
+            else
             {
                 for (int i = 0; i < _maxOrStoredCount; i++)
                 {
                     var builder = _store[i];
-                    if (builder.Capacity >= minimumCapacity)
+                    if (builder.Capacity >= minCapacity)
                     {
                         // Found one
                         _maxOrStoredCount--;
 
                         // Remove it from the array
-                        Array.Copy(_store, i + 1, _store, i, _maxOrStoredCount - i);
+                        if (i != _maxOrStoredCount)
+                            Array.Copy(_store, i + 1, _store, i, _maxOrStoredCount - i);
                         _store[_maxOrStoredCount] = null;
 
-                        if (clear) builder.Clear();
+                        if (clear)
+                            builder.Clear();
                         return builder;
                     }
                 }
             }
 
             // We don't have one big enough
-            return new StringBuilder(minimumCapacity);
+            return new StringBuilder(minCapacity);
         }
 
-        public Lease<StringBuilder> Lease(int minimumCapacity = 16, bool clear = true)
+        public Lease<StringBuilder> Lease(int minCapacity = 16, bool clear = true)
         {
-            return new Lease<StringBuilder>(Borrow(minimumCapacity, clear), this);
+            return new Lease<StringBuilder>(Borrow(minCapacity, clear), this);
         }
 
         public void Return(StringBuilder builder)
@@ -69,7 +73,8 @@ namespace Pandorum.Core.Pooling
                 throw new ArgumentNullException(nameof(builder));
 
             if (builder.Capacity > _maxBufferSize) return;
-            if (EnsureStoreInitialized() && _maxOrStoredCount == _store.Length) return;
+            if (_store == null) InitializeStore();
+            else if (_maxOrStoredCount == _store.Length) return;
 
             Debug.Assert(_maxOrStoredCount < _store.Length);
             Debug.Assert(_store[_maxOrStoredCount] == null);
@@ -77,21 +82,12 @@ namespace Pandorum.Core.Pooling
             _store[_maxOrStoredCount++] = builder;
         }
 
-        // Returns true if _store was already initialized
-        private bool EnsureStoreInitialized()
-        {
-            // Separated out into two methods to increase
-            // the chances of the JIT inlining this
-            return _store != null || EnsureStoreInitializedCore();
-        }
-
-        private bool EnsureStoreInitializedCore()
+        private void InitializeStore()
         {
             Debug.Assert(_store == null);
 
             _store = new StringBuilder[_maxOrStoredCount];
             _maxOrStoredCount = 0;
-            return false;
         }
     }
 }
