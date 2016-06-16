@@ -37,31 +37,20 @@ namespace Pandorum
         {
             var response = await GetResponseObject("method", "test.checkLicensing");
             CheckStatus(response);
-            return response["result"]["isAllowed"].ToObject<bool>();
+            return (bool)response["result"]["isAllowed"];
         }
 
         protected void CheckStatus(JObject response)
         {
-            var status = response["stat"].ToObject<string>();
+            var status = (string)response["stat"];
             if (status != "ok")
-                throw new HttpRequestException(); // TODO: Find more appropriate exception
+                throw new PandoraStatusException();
         }
 
         // Request logic
 
-        protected async Task<JObject> GetResponseObject(params string[] parameters)
-        {
-            return JObject.Parse(await GetResponseString(parameters));
-        }
-
-        protected Task<string> GetResponseString(params string[] parameters)
-        {
-            var uri = BuildUri(parameters);
-            return _httpClient.GetStringAsync(uri);
-        }
-
         // TODO: Move to QueryBuilder class?
-        private string BuildUri(string[] parameters)
+        private string BuildUri(params string[] parameters)
         {
             if (parameters.Length % 2 != 0)
                 throw new ArgumentException("The query parameters should have an even number of key/values.", nameof(parameters));
