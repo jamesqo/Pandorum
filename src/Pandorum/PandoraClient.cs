@@ -11,8 +11,7 @@ namespace Pandorum
 {
     public class PandoraClient : IDisposable
     {
-        private string _endpoint;
-        private HttpClient _httpClient;
+        private IPandoraJsonClient _baseClient;
 
         public PandoraClient()
             : this(useHttps: true) // TODO: Which one is better? HTTP or HTTPS?
@@ -28,39 +27,21 @@ namespace Pandorum
         }
 
         public PandoraClient(string endpoint)
-            : this(endpoint, new HttpClient())
+            : this(new VerifyingJsonClient(endpoint))
         {
         }
 
-        public PandoraClient(string endpoint, HttpClient baseClient)
+        private PandoraClient(IPandoraJsonClient baseClient)
         {
-            _endpoint = endpoint;
-            _httpClient = baseClient;
+            _baseClient = baseClient;
         }
 
         // API functionality
 
-        public Task<bool> CheckLicensing()
+        public async Task<bool> CheckLicensing()
         {
-            var uri = new PandoraUriBuilder()
-                .WithMethod("test.checkLicensing")
-                .ToString();
-            return GetJsonAndMap(uri,
-                obj => (bool)obj["result"]["isAllowed"]);
-        }
-
-        private async Task<T> GetJsonAndMap<T>(string uri, Func<JObject, T> func)
-        {
-            var response = await _httpClient.GetJsonAsync(uri).ConfigureAwait(false);
-            CheckStatus(response);
-            return func(response);
-        }
-
-        private static void CheckStatus(JObject response)
-        {
-            var status = (string)response["stat"];
-            if (status != "ok")
-                throw new PandoraStatusException();
+            var response = await _baseClient.CheckLicensing().ConfigureAwait(false);
+            return (bool)response["result"]["isAllowed"];
         }
         
         // Dispose logic
@@ -71,13 +52,11 @@ namespace Pandorum
         {
             if (disposing)
             {
-                if (_httpClient != null)
+                if (_baseClient != null)
                 {
-                    _httpClient.Dispose();
-                    _httpClient = null;
+                    _baseClient.Dispose();
+                    _baseClient = null;
                 }
-                if (_endpoint != null)
-                    _endpoint = null;
             }
         }
     }

@@ -18,6 +18,11 @@ namespace Pandorum.Core.Net
         public string PartnerId { get; private set; }
         public string UserId { get; private set; }
 
+        public PandoraUriBuilder(string endpoint) : this()
+        {
+            Endpoint = endpoint;
+        }
+
         public PandoraUriBuilder WithEndpoint(string endpoint)
         {
             var copy = this;

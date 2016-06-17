@@ -7,6 +7,7 @@
     "Pandorum.Core.Pooling": {
       "target": "project"
     },
+    "Portable.BouncyCastle": "1.8.1",
     "System.Net.Http": "4.0.1-rc2-24027"
   },
 

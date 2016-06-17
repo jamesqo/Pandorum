@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum
+namespace Pandorum.Core.Net
 {
     public class PandoraStatusException : Exception
     {
