@@ -21,8 +21,8 @@ namespace Pandorum
         public PandoraClient(bool useHttps)
             // TODO: Which one is better? Internal or non-internal?
             : this(useHttps ?
-                  PandoraEndpoints.TunerHttps :
-                  PandoraEndpoints.TunerHttp)
+                  PandoraEndpoints.Tuner.HttpsUri :
+                  PandoraEndpoints.Tuner.HttpUri)
         {
         }
 
