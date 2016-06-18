@@ -28,11 +28,13 @@ namespace Pandorum.Core
                 True : False : Null;
         }
 
-        public bool HasValue => _data != Null;
-
         public bool IsTrue => _data == True;
         public bool IsFalse => _data == False;
         public bool IsNull => _data == Null;
+
+        public bool HasValue => !IsNull;
+        public bool GetValueOrDefault() => IsTrue;
+        public bool Value => ((bool?)this).Value;
 
         public static implicit operator bool?(OptionalBool value)
         {
