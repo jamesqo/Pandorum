@@ -9,9 +9,14 @@ namespace Pandorum.Core.Net
 {
     public static class HttpClientExtensions
     {
-        public async static Task<JObject> GetJsonAsync(this HttpClient client, string requestUri)
+        public static Task<JObject> GetJsonAsync(this HttpClient client, string requestUri)
         {
-            return JObject.Parse(await client.GetStringAsync(requestUri).ConfigureAwait(false));
+            return AwaitAndReadJson(client.GetStringAsync(requestUri));
+        }
+
+        public static Task<JObject> PostAndReadJsonAsync(this HttpClient client, string requestUri, HttpContent content)
+        {
+            return AwaitAndReadJson(client.PostAndReadStringAsync(requestUri, content));
         }
 
         public static Task<string> PostAndReadStringAsync(this HttpClient client, string requestUri, HttpContent content)
@@ -24,6 +29,11 @@ namespace Pandorum.Core.Net
             var response = await task.ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             return await func(response.Content);
+        }
+
+        private async static Task<JObject> AwaitAndReadJson(Task<string> task)
+        {
+            return JObject.Parse(await task.ConfigureAwait(false));
         }
     }
 }

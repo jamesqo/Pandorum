@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Pandorum.Core.Net.Options;
+using Newtonsoft.Json;
 
 namespace Pandorum.Core.Net
 {
@@ -27,16 +28,30 @@ namespace Pandorum.Core.Net
 
         // API functionality
 
-        public Task<JObject> CheckLicensing(CheckLicensingOptions options)
+        public Task<JObject> CheckLicensing()
         {
             var uri = CreateUriBuilder()
                 .WithMethod("test.checkLicensing")
                 .ToString();
-            return GetJsonAsync(uri);
+            return _httpClient.GetJsonAsync(uri);
         }
 
         public Task<JObject> PartnerLogin(PartnerLoginOptions options)
         {
+            var uri = CreateUriBuilder()
+                .WithMethod("auth.partnerLogin")
+                .ToString();
+            var body = JsonConvert.SerializeObject(options);
+            var content = new StringContent(body);
+            return _httpClient.PostAndReadJsonAsync(uri, content);
+        }
+
+        public Task<JObject> UserLogin(UserLoginOptions options)
+        {
+            var uri = CreateUriBuilder()
+                .WithMethod("auth.userLogin")
+                .ToString();
+            var body = JsonConvert.SerializeObject(options);
         }
 
         // Helpers
@@ -44,11 +59,6 @@ namespace Pandorum.Core.Net
         private PandoraUriBuilder CreateUriBuilder()
         {
             return new PandoraUriBuilder(Endpoint);
-        }
-
-        private Task<JObject> GetJsonAsync(string requestUri)
-        {
-            return _httpClient.GetJsonAsync(requestUri);
         }
 
         // Dispose logic

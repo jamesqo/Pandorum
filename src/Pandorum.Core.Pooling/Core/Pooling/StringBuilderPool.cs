@@ -14,7 +14,8 @@ namespace Pandorum.Core.Pooling
 
         public static StringBuilderPool Default { get; } = new StringBuilderPool();
 
-        private int _maxOrStoreCount;
+        private int _storeCount; // set to max # of buffers if _store is null
+        // otherwise number of StringBuilders in _store
         private StringBuilder[] _store;
         private readonly int _maxBufferSize;
 
@@ -28,33 +29,30 @@ namespace Pandorum.Core.Pooling
             if (maxBuffers <= 0 || maxBufferSize <= 0)
                 throw new ArgumentOutOfRangeException(maxBuffers <= 0 ? nameof(maxBuffers) : nameof(maxBufferSize));
 
-            _maxOrStoreCount = maxBuffers;
+            _storeCount = maxBuffers;
             _maxBufferSize = maxBufferSize;
         }
 
         public StringBuilder Borrow(int minCapacity = 16, bool clear = true)
         {
-            if (_store == null)
-                InitializeStore();
-            else
+            EnsureStoreInitialized();
+
+            for (int i = 0; i < _storeCount; i++)
             {
-                for (int i = 0; i < _maxOrStoreCount; i++)
+                var builder = _store[i];
+                if (builder.Capacity >= minCapacity)
                 {
-                    var builder = _store[i];
-                    if (builder.Capacity >= minCapacity)
-                    {
-                        // Found one
-                        _maxOrStoreCount--;
+                    // Found one
+                    _storeCount--;
 
-                        // Remove it from the array
-                        if (i != _maxOrStoreCount)
-                            Array.Copy(_store, i + 1, _store, i, _maxOrStoreCount - i);
-                        _store[_maxOrStoreCount] = null;
+                    // Remove it from the array
+                    if (i != _storeCount)
+                        Array.Copy(_store, i + 1, _store, i, _storeCount - i);
+                    _store[_storeCount] = null;
 
-                        if (clear)
-                            builder.Clear();
-                        return builder;
-                    }
+                    if (clear)
+                        builder.Clear();
+                    return builder;
                 }
             }
 
@@ -73,21 +71,22 @@ namespace Pandorum.Core.Pooling
                 throw new ArgumentNullException(nameof(builder));
 
             if (builder.Capacity > _maxBufferSize) return;
-            if (_store == null) InitializeStore();
-            else if (_maxOrStoreCount == _store.Length) return;
 
-            Debug.Assert(_maxOrStoreCount < _store.Length);
-            Debug.Assert(_store[_maxOrStoreCount] == null);
+            EnsureStoreInitialized();
+            if (_storeCount == _store.Length) return;
 
-            _store[_maxOrStoreCount++] = builder;
+            Debug.Assert(_storeCount < _store.Length && _store[_storeCount] == null);
+
+            _store[_storeCount++] = builder;
         }
 
-        private void InitializeStore()
+        private void EnsureStoreInitialized()
         {
-            Debug.Assert(_store == null);
-
-            _store = new StringBuilder[_maxOrStoreCount];
-            _maxOrStoreCount = 0;
+            if (_store == null)
+            {
+                _store = new StringBuilder[_storeCount];
+                _storeCount = 0;
+            }
         }
     }
 }

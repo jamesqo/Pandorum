@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Pandorum.Core.Net.Options;
 
 namespace Pandorum.Core.Net
 {
@@ -24,6 +25,18 @@ namespace Pandorum.Core.Net
             return AwaitAndCheck(_inner.CheckLicensing());
         }
 
+        public Task<JObject> PartnerLogin(PartnerLoginOptions options)
+        {
+            return AwaitAndCheck(_inner.PartnerLogin(options));
+        }
+
+        public Task<JObject> UserLogin(UserLoginOptions options)
+        {
+            return AwaitAndCheck(_inner.UserLogin(options));
+        }
+
+        // Dispose logic
+
         public void Dispose() => Dispose(true);
 
         protected virtual void Dispose(bool disposing)
@@ -37,6 +50,8 @@ namespace Pandorum.Core.Net
                 }
             }
         }
+
+        // Helper methods
 
         private async Task<JObject> AwaitAndCheck(Task<JObject> task)
         {
