@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.Cryptography
 {
-    internal static class BlowfishEcb
+    public static class BlowfishEcb
     {
         public static ArrayLease<byte> EncryptBytes(byte[] plaintext, byte[] key, out int count)
         {
