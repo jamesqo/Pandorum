@@ -13,71 +13,65 @@ namespace Pandorum.Core.Cryptography
 {
     internal static class BlowfishEcb
     {
-        public static byte[] EncryptBytes(byte[] plaintext, byte[] key)
+        public static ArrayLease<byte> EncryptBytes(byte[] plaintext, byte[] key, out int count)
         {
             return EncryptBytes(
                 new ArraySegment<byte>(plaintext),
-                new ArraySegment<byte>(key));
+                new ArraySegment<byte>(key),
+                out count);
         }
 
-        // TODO: Return Lease<T> so this can use array pooling
-        public static byte[] EncryptBytes(ArraySegment<byte> plaintext, ArraySegment<byte> key)
+        public static ArrayLease<byte> EncryptBytes(ArraySegment<byte> plaintext, ArraySegment<byte> key, out int count)
         {
             // Blowfish encrypts 8 bytes at a time
             int leftover = plaintext.Count & 7;
-            int resultCount = ((plaintext.Count - 1) & ~7) + 8;
-
-            var result = new byte[resultCount];
+            count = ((plaintext.Count - 1) & ~7) + 8;
 
             var engine = new BlowfishEngine();
             var keyParameter = new KeyParameter(key.Array, key.Offset, key.Count);
             engine.Init(forEncryption: true, parameters: keyParameter);
 
-            int i = plaintext.Offset;
-            int j = 0;
-            byte[] input = plaintext.Array;
+            var lease = ArrayPool<byte>.Shared.Lease(count);
 
-            // Process each block of bytes
-            while (i + 7 < plaintext.Count)
+            try
             {
-                engine.ProcessBlock(input, i, result, j);
+                int i = plaintext.Offset;
+                int j = 0;
+                byte[] input = plaintext.Array;
+                byte[] output = lease.Array;
 
-                i += 8;
-                j += 8;
-            }
-
-            Debug.Assert(i + leftover == plaintext.Count);
-
-            if (leftover != 0)
-            {
-                // Process the stray bytes
-                var pooled = ArrayPool<byte>.Shared.Rent(8);
-                try
+                // Process each block of bytes
+                while (i + 7 < plaintext.Count)
                 {
-                    // Copy over the leftover data
-                    for (int k = 0; k < leftover; k++)
-                    {
-                        pooled[k] = input[i++];
-                    }
+                    engine.ProcessBlock(input, i, output, j);
 
-                    // Leave the null bytes at the end and process
-                    engine.ProcessBlock(pooled, 0, result, j);
+                    i += 8;
+                    j += 8;
                 }
-                finally
+
+                Debug.Assert(i + leftover == plaintext.Count);
+
+                if (leftover != 0)
                 {
-                    ArrayPool<byte>.Shared.Return(pooled);
+                    var unprocessedSegment = new ArraySegment<byte>(input, i, leftover);
+                    HandleLeftoverBytes(engine, unprocessedSegment, output, j);
                 }
             }
+            catch
+            {
+                lease.Dispose();
+                throw;
+            }
 
-            return result;
+            return lease;
         }
 
-        public static byte[] EncryptStringToBytes(string plaintext, string key)
+        public static ArrayLease<byte> EncryptStringToBytes(string plaintext, string key, out int count)
         {
-            return EncryptStringToBytes(plaintext, key, Encoding.UTF8);
+            return EncryptStringToBytes(plaintext, key, Encoding.UTF8, out count);
         }
 
-        public static byte[] EncryptStringToBytes(string plaintext, string key, Encoding encoding)
+        public static ArrayLease<byte> EncryptStringToBytes(string plaintext, string key, Encoding encoding, out int count)
         {
             int byteCount = encoding.GetByteCount(plaintext);
             // byteCount needs to be a multiple of 8, so if it
@@ -92,11 +86,40 @@ namespace Pandorum.Core.Cryptography
 
                 return EncryptBytes(
                     new ArraySegment<byte>(textBytes, 0, written),
-                    new ArraySegment<byte>(keyBytes));
+                    new ArraySegment<byte>(keyBytes),
+                    out count);
             }
             finally
             {
                 ArrayPool<byte>.Shared.Return(textBytes);
+            }
+        }
+
+        private static void HandleLeftoverBytes(BlowfishEngine engine, ArraySegment<byte> unprocessed, byte[] output, int outputIndex)
+        {
+            byte[] input = unprocessed.Array;
+            int inputIndex = unprocessed.Offset;
+            int leftover = unprocessed.Count;
+
+            Debug.Assert(leftover != 0);
+            Debug.Assert(outputIndex + 7 < output.Length);
+
+            // Process the stray bytes
+            var pooled = ArrayPool<byte>.Shared.Rent(8);
+            try
+            {
+                // Copy over the leftover data
+                for (int i = 0; i < leftover; i++)
+                {
+                    pooled[i] = input[inputIndex++];
+                }
+
+                // Leave the null bytes at the end and process
+                engine.ProcessBlock(pooled, 0, output, outputIndex);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(pooled);
             }
         }
     }
