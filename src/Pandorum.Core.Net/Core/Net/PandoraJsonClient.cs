@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pandorum.Core.Net.Options;
 using Newtonsoft.Json;
+using Pandorum.Core.Net.Authentication;
 
 namespace Pandorum.Core.Net
 {
@@ -14,17 +15,24 @@ namespace Pandorum.Core.Net
         private HttpClient _httpClient;
 
         public PandoraJsonClient(string endpoint)
-            : this(endpoint, new HttpClient())
+            : this(endpoint, PandoraEndpoints.Tuner.iOS)
         {
         }
 
-        public PandoraJsonClient(string endpoint, HttpClient baseClient)
+        public PandoraJsonClient(string endpoint, IPartnerInfo partnerInfo)
+            : this(endpoint, partnerInfo, new HttpClient())
+        {
+        }
+
+        public PandoraJsonClient(string endpoint, IPartnerInfo partnerInfo, HttpClient baseClient)
         {
             Endpoint = endpoint;
+            PartnerInfo = partnerInfo;
             _httpClient = baseClient;
         }
 
         public string Endpoint { get; }
+        public IPartnerInfo PartnerInfo { get; }
 
         // API functionality
 

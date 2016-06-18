@@ -1,10 +1,10 @@
-﻿using Pandorum.Authentication;
+﻿using Pandorum.Core.Net.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum
+namespace Pandorum.Core.Net
 {
     public static class PandoraEndpoints
     {

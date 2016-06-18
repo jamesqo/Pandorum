@@ -11,10 +11,6 @@ namespace Pandorum.Core.Net
     {
         private IPandoraJsonClient _inner;
 
-        public VerifyingJsonClient(string endpoint)
-            : this(new PandoraJsonClient(endpoint))
-        { }
-
         public VerifyingJsonClient(IPandoraJsonClient inner)
         {
             _inner = inner;
