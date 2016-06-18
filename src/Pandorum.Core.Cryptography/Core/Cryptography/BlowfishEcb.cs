@@ -1,5 +1,6 @@
 ﻿using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
+using Pandorum.Core.Numerics;
 using Pandorum.Core.Pooling;
 using System;
 using System.Buffers;

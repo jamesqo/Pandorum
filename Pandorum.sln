@@ -16,6 +16,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Core.Pooling", "sr
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Core.Net", "src\Pandorum.Core.Net\Pandorum.Core.Net.xproj", "{121BACB5-D5D8-4F58-BEC0-141CFFDA70C1}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Core.Cryptography", "src\Pandorum.Core.Cryptography\Pandorum.Core.Cryptography.xproj", "{90F978D6-5448-4DF8-9B09-77D3420F2246}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{121BACB5-D5D8-4F58-BEC0-141CFFDA70C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{121BACB5-D5D8-4F58-BEC0-141CFFDA70C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{121BACB5-D5D8-4F58-BEC0-141CFFDA70C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90F978D6-5448-4DF8-9B09-77D3420F2246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F978D6-5448-4DF8-9B09-77D3420F2246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F978D6-5448-4DF8-9B09-77D3420F2246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F978D6-5448-4DF8-9B09-77D3420F2246}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,5 +48,6 @@ Global
 		{EC5AE772-2AEE-4645-AD74-C21BA9B5D472} = {060D0688-A2B6-4170-9C24-F566C330E6A9}
 		{C225A319-4473-472B-AB3F-72A667D0C2DA} = {060D0688-A2B6-4170-9C24-F566C330E6A9}
 		{121BACB5-D5D8-4F58-BEC0-141CFFDA70C1} = {060D0688-A2B6-4170-9C24-F566C330E6A9}
+		{90F978D6-5448-4DF8-9B09-77D3420F2246} = {060D0688-A2B6-4170-9C24-F566C330E6A9}
 	EndGlobalSection
 EndGlobal
