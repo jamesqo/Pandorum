@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core.Pooling.Tests.Mocks
+namespace Pandorum.Core.Pooling.Tests
 {
     public class FakeOwner<T> : IOwner<T>
     {
