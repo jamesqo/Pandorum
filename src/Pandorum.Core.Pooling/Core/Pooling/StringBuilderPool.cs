@@ -37,7 +37,7 @@ namespace Pandorum.Core.Pooling
         {
             EnsureStoreInitialized();
 
-            for (int i = 0; i < _storeCount; i++)
+            for (int i = _storeCount - 1; i >= 0; i--)
             {
                 var builder = _store[i];
                 if (builder.Capacity >= minCapacity)

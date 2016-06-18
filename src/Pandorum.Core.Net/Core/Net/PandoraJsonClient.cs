@@ -52,6 +52,8 @@ namespace Pandorum.Core.Net
                 .WithMethod("auth.userLogin")
                 .ToString();
             var body = JsonConvert.SerializeObject(options);
+            // TODO
+            return default(Task<JObject>);
         }
 
         // Helpers

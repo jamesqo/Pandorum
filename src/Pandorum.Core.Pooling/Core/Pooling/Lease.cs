@@ -16,6 +16,9 @@ namespace Pandorum.Core.Pooling
 
         public Lease(T leased, IOwner<T> owner)
         {
+            if (owner == null)
+                throw new ArgumentNullException(nameof(owner));
+
             _leased = leased;
             _owner = owner;
         }
