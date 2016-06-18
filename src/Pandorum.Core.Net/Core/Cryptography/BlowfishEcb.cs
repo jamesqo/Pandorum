@@ -95,6 +95,25 @@ namespace Pandorum.Core.Cryptography
             }
         }
 
+        public static string EncryptStringToHex(string plaintext, string key)
+        {
+            return EncryptStringToHex(plaintext, key, Encoding.UTF8);
+        }
+
+        public static string EncryptStringToHex(string plaintext, string key, Encoding encoding)
+        {
+            int byteCount, charCount;
+            using (var lease1 = EncryptStringToBytes(plaintext, key, encoding, out byteCount))
+            {
+                var bytes = new ArraySegment<byte>(lease1.Array, 0, byteCount);
+                using (var lease2 = TranslateBytesToHex(bytes, out charCount))
+                {
+                    var chars = lease2.Array;
+                    return new string(chars, 0, charCount);
+                }
+            }
+        }
+
         private static void HandleLeftoverBytes(BlowfishEngine engine, ArraySegment<byte> unprocessed, byte[] output, int outputIndex)
         {
             byte[] input = unprocessed.Array;
@@ -121,6 +140,41 @@ namespace Pandorum.Core.Cryptography
             {
                 ArrayPool<byte>.Shared.Return(pooled);
             }
+        }
+
+        private static ArrayLease<char> TranslateBytesToHex(ArraySegment<byte> bytes, out int charCount)
+        {
+            byte[] buffer = bytes.Array;
+            int offset = bytes.Offset;
+            
+            charCount = bytes.Count * 2;
+            var lease = ArrayPool<char>.Shared.Lease(charCount);
+            
+            try
+            {
+                var chars = lease.Array;
+
+                int j = 0;
+                char left, right;
+
+                for (int i = 0; i < bytes.Count; i++)
+                {
+                    byte b = buffer[offset + i];
+                    Hexadecimal.FromByte(b, out left, out right);
+                    chars[j] = left;
+                    chars[j + 1] = right;
+                    j += 2;
+                }
+
+                Debug.Assert(j == charCount);
+            }
+            catch
+            {
+                lease.Dispose();
+                throw;
+            }
+
+            return lease;
         }
     }
 }
