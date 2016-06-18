@@ -44,7 +44,7 @@ namespace Pandorum.Core
             // return new bool? { value = value.IsTrue, hasValue = value.HasValue };
 
             return value.HasValue ?
-                new bool?(value.IsTrue) :
+                new bool?(value.GetValueOrDefault()) :
                 default(bool?);
         }
 
@@ -55,7 +55,7 @@ namespace Pandorum.Core
 
         public int CompareTo(OptionalBool other)
         {
-            throw new NotImplementedException();
+            return _data.CompareTo(other._data);
         }
 
         public override bool Equals(object obj)
@@ -88,7 +88,7 @@ namespace Pandorum.Core
 
         public override string ToString()
         {
-            return HasValue ? IsTrue.ToString() : string.Empty;
+            return HasValue ? GetValueOrDefault().ToString() : string.Empty;
         }
     }
 }
