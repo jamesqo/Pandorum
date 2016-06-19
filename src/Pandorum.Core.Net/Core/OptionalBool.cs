@@ -10,9 +10,9 @@ namespace Pandorum.Core
     // Just like bool?, except slimmed down to one byte
     public struct OptionalBool : IEquatable<OptionalBool>, IComparable<OptionalBool>
     {
-        private const byte False = 2;
-        private const byte True = 3;
         private const byte Null = 0;
+        private const byte False = 1;
+        private const byte True = 2;
 
         // Least significant bit is set if true
         // The next one up is set if we have a value
@@ -30,13 +30,11 @@ namespace Pandorum.Core
                 True : False : Null;
         }
 
-        public bool IsTrue => _data == True;
-        public bool IsFalse => _data == False;
-        public bool IsNull => _data == Null;
-
-        public bool HasValue => !IsNull;
-        public bool GetValueOrDefault() => IsTrue;
+        public bool HasValue => _data != Null;
+        public bool GetValueOrDefault() => _data == True;
         public bool Value => ((bool?)this).Value;
+
+        // Operators
 
         public static implicit operator bool?(OptionalBool value)
         {
@@ -51,6 +49,16 @@ namespace Pandorum.Core
         }
 
         public static implicit operator OptionalBool(bool? value)
+        {
+            return new OptionalBool(value);
+        }
+
+        public static explicit operator bool(OptionalBool value)
+        {
+            return value.Value;
+        }
+
+        public static implicit operator OptionalBool(bool value)
         {
             return new OptionalBool(value);
         }
@@ -75,7 +83,7 @@ namespace Pandorum.Core
             {
                 return Equals((OptionalBool)obj);
             }
-            return IsNull && obj == null;
+            return !HasValue && obj == null;
         }
 
         public bool Equals(OptionalBool other)
@@ -85,7 +93,7 @@ namespace Pandorum.Core
 
         public override int GetHashCode()
         {
-            return IsTrue ? 1 : 0;
+            return GetValueOrDefault() ? 1 : 0;
         }
 
         public override string ToString()
