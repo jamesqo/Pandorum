@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using Pandorum.Core.Net.Options;
 using Newtonsoft.Json;
 using Pandorum.Core.Net.Authentication;
+using Pandorum.Core.Cryptography;
+using System.Text;
+using System.Buffers;
+using System.Diagnostics;
 
 namespace Pandorum.Core.Net
 {
@@ -50,8 +54,8 @@ namespace Pandorum.Core.Net
                 .WithMethod("auth.partnerLogin")
                 .ToString();
             var body = JsonConvert.SerializeObject(options);
-            var content = new StringContent(body);
-            return _httpClient.PostAndReadJsonAsync(uri, content);
+            return LoadContentAndReturn(body,
+                content => _httpClient.PostAndReadJsonAsync(uri, content));
         }
 
         public Task<JObject> UserLogin(UserLoginOptions options)
@@ -60,8 +64,9 @@ namespace Pandorum.Core.Net
                 .WithMethod("auth.userLogin")
                 .ToString();
             var body = JsonConvert.SerializeObject(options);
-            // TODO
-            return default(Task<JObject>);
+            body = BlowfishEcb.EncryptStringToHex(body, PartnerInfo.EncryptPassword);
+            return LoadContentAndReturn(body,
+                content => _httpClient.PostAndReadJsonAsync(uri, content));
         }
 
         // Helpers
@@ -69,6 +74,33 @@ namespace Pandorum.Core.Net
         private PandoraUriBuilder CreateUriBuilder()
         {
             return new PandoraUriBuilder(Endpoint);
+        }
+
+        // TODO: PooledStringContent so we can use a simple using statement
+
+        private static T LoadContentAndReturn<T>(string text, Func<HttpContent, T> func)
+        {
+            return LoadContentAndReturn(text, Encoding.UTF8, func);
+        }
+
+        private static T LoadContentAndReturn<T>(string text, Encoding encoding, Func<HttpContent, T> func)
+        {
+            int byteCount = encoding.GetByteCount(text);
+
+            var pooled = ArrayPool<byte>.Shared.Rent(byteCount);
+            try
+            {
+                int written = encoding.GetBytes(text, 0, text.Length, pooled, 0);
+                Debug.Assert(byteCount == written);
+                using (var content = new ByteArrayContent(pooled, 0, written))
+                {
+                    return func(content);
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(pooled);
+            }
         }
 
         // Dispose logic

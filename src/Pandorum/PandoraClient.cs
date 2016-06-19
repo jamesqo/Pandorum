@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pandorum.Core;
 using Pandorum.Core.Net;
+using Pandorum.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,34 +15,35 @@ namespace Pandorum
         private IPandoraJsonClient _baseClient;
 
         public PandoraClient()
-            : this(useHttps: true) // TODO: Which one is better? HTTP or HTTPS?
+            : this(PandoraClientOptions.Default)
         {
         }
 
-        public PandoraClient(bool useHttps)
-            // TODO: Which one is better? Internal or non-internal?
-            : this(useHttps ?
-                  PandoraEndpoints.Tuner.HttpsUri :
-                  PandoraEndpoints.Tuner.HttpUri)
+        public PandoraClient(PandoraClientOptions options)
         {
+            // TODO
         }
 
-        public PandoraClient(string endpoint)
-            : this(new VerifyingJsonClient(endpoint))
-        {
-        }
-
-        private PandoraClient(IPandoraJsonClient baseClient)
+        public PandoraClient(IPandoraJsonClient baseClient)
         {
             _baseClient = baseClient;
         }
 
         // API functionality
 
-        public async Task<bool> CheckLicensing()
+        public Task<bool> CheckLicensing()
         {
-            var response = await _baseClient.CheckLicensing().ConfigureAwait(false);
-            return (bool)response["result"]["isAllowed"];
+            return AwaitAndSelectResult(
+                _baseClient.CheckLicensing(),
+                result => (bool)result["isAllowed"]);
+        }
+
+        // Helpers
+
+        private async static Task<T> AwaitAndSelectResult<T>(Task<JObject> task, Func<JToken, T> func)
+        {
+            var response = await task.ConfigureAwait(false);
+            return func(response["result"]);
         }
         
         // Dispose logic

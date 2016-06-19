@@ -34,9 +34,13 @@ namespace Pandorum.Core.Net
         public static class InternalTuner
         {
             private static IPartnerInfo s_desktop;
+            private static IPartnerInfo s_gadget;
 
             public static IPartnerInfo Desktop =>
                 s_desktop ?? (s_desktop = new DesktopPartnerInfo());
+
+            public static IPartnerInfo Gadget =>
+                s_gadget ?? (s_gadget = new GadgetPartnerInfo());
 
             public static string HttpUri => "http://internal-tuner.pandora.com/services/json/";
             public static string HttpsUri => "https://internal-tuner.pandora.com/services/json/";

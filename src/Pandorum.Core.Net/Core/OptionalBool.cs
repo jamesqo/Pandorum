@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core
 {
+    // TODO: FourOptionalBools, FiveOptionalBools both in 1 byte
+
     // Just like bool?, except slimmed down to one byte
     public struct OptionalBool : IEquatable<OptionalBool>, IComparable<OptionalBool>
     {

@@ -7,8 +7,12 @@ namespace Pandorum.Core.Net
 {
     public class PandoraStatusException : Exception
     {
-        public PandoraStatusException() { }
-        public PandoraStatusException(string message) : base(message) { }
-        public PandoraStatusException(string message, Exception inner) : base(message, inner) { }
+        public PandoraStatusException(int code, string message)
+            : base(message)
+        {
+            Code = code;
+        }
+
+        public int Code { get; }
     }
 }

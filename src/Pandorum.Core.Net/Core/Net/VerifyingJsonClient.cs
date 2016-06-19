@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Pandorum.Core.Net.Options;
+using System.Diagnostics;
 
 namespace Pandorum.Core.Net
 {
@@ -60,7 +61,13 @@ namespace Pandorum.Core.Net
         {
             var status = (string)response["stat"];
             if (status != "ok")
-                throw new PandoraStatusException();
+            {
+                Debug.Assert(status == "fail");
+
+                int code = (int)response["code"];
+                string message = (string)response["message"];
+                throw new PandoraStatusException(code, message);
+            }
         }
     }
 }
