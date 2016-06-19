@@ -24,6 +24,9 @@ namespace Pandorum.Core.Cryptography.Tests
 
             // Strings aren't multiples of 8; need padding
             yield return new object[] { "garble102934", "f44h389", "fdbbbf018865c902f55b311cb5de9b33" };
+            // 1/7-byte strings to catch off-by-one errors
+            yield return new object[] { "b", "a", "897c4fb958fbd095" };
+            yield return new object[] { "bbbbbbb", "aaaaaaa", "820ff7b845e16731" };
 
             // TODO: Add tests for UTF-8 strings
             // Note that each non-ASCII char will be represented as

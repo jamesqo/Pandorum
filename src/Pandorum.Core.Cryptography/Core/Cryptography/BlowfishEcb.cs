@@ -121,7 +121,7 @@ namespace Pandorum.Core.Cryptography
             int inputIndex = unprocessed.Offset;
             int leftover = unprocessed.Count;
 
-            Debug.Assert(leftover != 0);
+            Debug.Assert(leftover > 0 && leftover < 8);
             Debug.Assert(outputIndex + 7 < output.Length);
 
             // Process the stray bytes
@@ -132,6 +132,13 @@ namespace Pandorum.Core.Cryptography
                 for (int i = 0; i < leftover; i++)
                 {
                     pooled[i] = input[inputIndex++];
+                }
+
+                // Clear the remainder of the 8 bytes
+                // (Rented arrays are not always clear)
+                for (int i = 7; i >= leftover; i--)
+                {
+                    pooled[i] = 0;
                 }
 
                 // Leave the null bytes at the end and process
