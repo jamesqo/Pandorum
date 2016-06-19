@@ -6,11 +6,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pandorum.Core.Net.Options;
 using Newtonsoft.Json;
-using Pandorum.Core.Net.Authentication;
+using Pandorum.Net.Authentication;
 using Pandorum.Core.Cryptography;
 using System.Text;
 using System.Buffers;
 using System.Diagnostics;
+using Pandorum.Net;
 
 namespace Pandorum.Core.Net
 {

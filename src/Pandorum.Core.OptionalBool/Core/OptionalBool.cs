@@ -16,7 +16,7 @@ namespace Pandorum.Core
 
         // Least significant bit is set if true
         // The next one up is set if we have a value
-        private readonly byte _data;
+        internal readonly byte _data;
 
         public OptionalBool(bool value)
         {
@@ -28,6 +28,11 @@ namespace Pandorum.Core
             _data = value.HasValue ?
                 value.GetValueOrDefault() ?
                 True : False : Null;
+        }
+
+        internal OptionalBool(byte data)
+        {
+            _data = data;
         }
 
         public bool HasValue => _data != Null;

@@ -7,6 +7,9 @@
     "Pandorum.Core.Cryptography": {
       "target": "project"
     },
+    "Pandorum.Core.OptionalBool": {
+      "target": "project"
+    },
     "Pandorum.Core.Pooling": {
       "target": "project"
     },
