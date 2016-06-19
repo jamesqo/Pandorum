@@ -6,6 +6,8 @@ using Xunit;
 
 namespace Pandorum.Core.Optional.Tests
 {
+    // TODO: Add more tests, including IEquatable/etc.
+
     public class FourOptionalBoolsTests
     {
         [Fact]
