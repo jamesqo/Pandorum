@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Pandorum.Core.Net.Options;
+using Pandorum.Core.Options;
 using System.Diagnostics;
+using Pandorum.Core.Options.Authentication;
+using Pandorum.Core.Options.Stations;
 
 namespace Pandorum.Core.Net
 {
@@ -30,6 +32,81 @@ namespace Pandorum.Core.Net
         public Task<JObject> UserLogin(UserLoginOptions options)
         {
             return AwaitAndCheck(_inner.UserLogin(options));
+        }
+
+        public Task<JObject> GetStationList(GetStationListOptions options)
+        {
+            return AwaitAndCheck(_inner.GetStationList(options));
+        }
+
+        public Task<JObject> GetStationListChecksum()
+        {
+            return AwaitAndCheck(_inner.GetStationListChecksum());
+        }
+
+        public Task<JObject> Search(SearchOptions options)
+        {
+            return AwaitAndCheck(_inner.Search(options));
+        }
+
+        public Task<JObject> CreateStation(CreateStationOptions options)
+        {
+            return AwaitAndCheck(_inner.CreateStation(options));
+        }
+
+        public Task<JObject> AddMusic(AddMusicOptions options)
+        {
+            return AwaitAndCheck(_inner.AddMusic(options));
+        }
+
+        public Task<JObject> DeleteMusic(DeleteMusicOptions options)
+        {
+            return AwaitAndCheck(_inner.DeleteMusic(options));
+        }
+
+        public Task<JObject> RenameStation(RenameStationOptions options)
+        {
+            return AwaitAndCheck(_inner.RenameStation(options));
+        }
+
+        public Task<JObject> DeleteStation(DeleteStationOptions options)
+        {
+            return AwaitAndCheck(_inner.DeleteStation(options));
+        }
+
+        public Task<JObject> GetStation(GetStationOptions options)
+        {
+            return AwaitAndCheck(_inner.GetStation(options));
+        }
+
+        public Task<JObject> DeleteFeedback(DeleteFeedbackOptions options)
+        {
+            return AwaitAndCheck(_inner.DeleteFeedback(options));
+        }
+
+        public Task<JObject> GetGenreStations()
+        {
+            return AwaitAndCheck(_inner.GetGenreStations());
+        }
+
+        public Task<JObject> GetGenreStationsChecksum(GetGenreStationsChecksumOptions options)
+        {
+            return AwaitAndCheck(_inner.GetGenreStationsChecksum(options));
+        }
+
+        public Task<JObject> ShareStation(ShareStationOptions options)
+        {
+            return AwaitAndCheck(_inner.ShareStation(options));
+        }
+
+        public Task<JObject> TransformSharedStation(TransformSharedStationOptions options)
+        {
+            return AwaitAndCheck(_inner.TransformSharedStation(options));
+        }
+
+        public Task<JObject> SetQuickMix(SetQuickMixOptions options)
+        {
+            return AwaitAndCheck(_inner.SetQuickMix(options));
         }
 
         // Dispose logic

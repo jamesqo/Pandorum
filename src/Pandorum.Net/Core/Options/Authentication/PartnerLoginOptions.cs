@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core.Net.Options
+namespace Pandorum.Core.Options.Authentication
 {
     public class PartnerLoginOptions
     {

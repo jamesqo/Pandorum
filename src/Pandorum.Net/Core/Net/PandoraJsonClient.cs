@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pandorum.Core.Net.Options;
+using Pandorum.Core.Options;
 using Newtonsoft.Json;
 using Pandorum.Net.Authentication;
 using Pandorum.Core.Cryptography;
@@ -12,6 +12,7 @@ using System.Text;
 using System.Buffers;
 using System.Diagnostics;
 using Pandorum.Net;
+using Pandorum.Core.Options.Authentication;
 
 namespace Pandorum.Core.Net
 {
