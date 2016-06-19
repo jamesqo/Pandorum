@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core
 {
-    // TODO: FourOptionalBools, FiveOptionalBools both in 1 byte
+    // TODO: Should this be moved to Pandorum.Core.Optional namespace?
+    // TODO: FiveOptionalBools as well, in 1 byte?
 
     // Just like bool?, except slimmed down to one byte
     public struct OptionalBool : IEquatable<OptionalBool>, IComparable<OptionalBool>
@@ -75,20 +76,16 @@ namespace Pandorum.Core
 
         public override bool Equals(object obj)
         {
-            /*
-            if (HasValue ^ obj != null)
-            {
-                return false;
-            }
-            return obj is OptionalBool &&
-                Equals((OptionalBool)obj);
-            */
-            // Above will return true if obj is a 'null' OptionalBool
             if (obj is OptionalBool)
             {
                 return Equals((OptionalBool)obj);
             }
-            return !HasValue && obj == null;
+            if (!HasValue) return obj == null;
+            if (!(obj is bool)) return false;
+
+            // non-default bool? also goes down this path
+            // (new bool?(1) is bool) == true
+            return HasValue && GetValueOrDefault() == (bool)obj;
         }
 
         public bool Equals(OptionalBool other)

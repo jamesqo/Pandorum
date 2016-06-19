@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core
 {
+    // TODO: Should this be moved to Pandorum.Core.Optional namespace?
+
     public struct FourOptionalBools : IEquatable<FourOptionalBools>
     {
         private readonly byte _data;
