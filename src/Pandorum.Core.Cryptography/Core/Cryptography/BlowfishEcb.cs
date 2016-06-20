@@ -83,10 +83,19 @@ namespace Pandorum.Core.Cryptography
             try
             {
                 int written = encoding.GetBytes(plaintext, 0, plaintext.Length, textBytes, 0);
+                Debug.Assert(written <= byteCount && byteCount - written < 8);
+
+                // Rented arrays are not always clear, so zero
+                // out any bytes between written and byteCount
+                for (int i = byteCount - 1; i >= written; i--)
+                {
+                    textBytes[i] = 0;
+                }
+
                 var keyBytes = encoding.GetBytes(key); // TODO: Pool array for key/memoize results?
 
                 return EncryptBytes(
-                    new ArraySegment<byte>(textBytes, 0, written),
+                    new ArraySegment<byte>(textBytes, 0, byteCount),
                     new ArraySegment<byte>(keyBytes),
                     out count);
             }

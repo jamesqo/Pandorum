@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,13 +10,32 @@ namespace Pandorum.Core.Cryptography.Tests
     public class BlowfishEcbTests
     {
         [Theory]
-        [MemberData(nameof(EncryptionData))]
-        public void Encryption(string plaintext, string key, string hex)
+        [MemberData(nameof(EncryptDecryptData))]
+        public void BytesEncryption(string plaintext, string key, string hex)
+        {
+            var textBytes = Encoding.UTF8.GetBytes(plaintext);
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+
+            int count;
+            using (var lease = BlowfishEcb.EncryptBytes(textBytes, keyBytes, out count))
+            {
+                var outputHex = BitConverter
+                    .ToString(lease.Array, 0, count)
+                    .Replace("-", string.Empty)
+                    .ToLowerInvariant();
+
+                Assert.Equal(hex, outputHex);
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(EncryptDecryptData))]
+        public void StringEncryption(string plaintext, string key, string hex)
         {
             Assert.Equal(hex, BlowfishEcb.EncryptStringToHex(plaintext, key));
         }
 
-        public static IEnumerable<object[]> EncryptionData()
+        public static IEnumerable<object[]> EncryptDecryptData()
         {
             // Everything divisible by 8 (no padding)
             yield return new object[] { "foobarba", "12345678", "5cded4361825e53c" };
