@@ -13,6 +13,7 @@ using System.Buffers;
 using System.Diagnostics;
 using Pandorum.Net;
 using Pandorum.Core.Options.Authentication;
+using Pandorum.Core.Time;
 
 namespace Pandorum.Core.Net
 {
@@ -37,10 +38,13 @@ namespace Pandorum.Core.Net
             _httpClient = baseClient;
         }
 
-        public string Endpoint { get; }
-        public IPartnerInfo PartnerInfo { get; }
+        public string Endpoint { get; set; }
+        public IPartnerInfo PartnerInfo { get; set; }
+        public long SyncTimestamp { get; set; }
 
         // API functionality
+
+        // Authentication
 
         public Task<JObject> CheckLicensing()
         {
@@ -76,6 +80,11 @@ namespace Pandorum.Core.Net
         private PandoraUriBuilder CreateUriBuilder()
         {
             return new PandoraUriBuilder(Endpoint);
+        }
+
+        private long CalculateSyncTime()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTime() + SyncTimestamp;
         }
 
         // TODO: PooledStringContent so we can use a simple using statement
