@@ -14,6 +14,7 @@ using System.Diagnostics;
 using Pandorum.Net;
 using Pandorum.Core.Options.Authentication;
 using Pandorum.Core.Time;
+using Pandorum.Core.Options.Stations;
 
 namespace Pandorum.Core.Net
 {
@@ -128,6 +129,84 @@ namespace Pandorum.Core.Net
                     _httpClient = null;
                 }
             }
+        }
+
+        // TODO: Move this up? Or not
+        // Stations
+
+        public Task<JObject> GetStationList(GetStationListOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> GetStationListChecksum()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> Search(SearchOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> CreateStation(CreateStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> AddMusic(AddMusicOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> DeleteMusic(DeleteMusicOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> RenameStation(RenameStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> DeleteStation(DeleteStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> GetStation(GetStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> DeleteFeedback(DeleteFeedbackOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> GetGenreStations()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> GetGenreStationsChecksum(GetGenreStationsChecksumOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> ShareStation(ShareStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> TransformSharedStation(TransformSharedStationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<JObject> SetQuickMix(SetQuickMixOptions options)
+        {
+            throw new NotImplementedException();
         }
     }
 }
