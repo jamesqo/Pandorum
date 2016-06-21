@@ -64,6 +64,8 @@ namespace Pandorum.Core.Cryptography
 
                 if (leftover != 0)
                 {
+                    // Handle the leftover input bytes
+
                     Debug.Assert(
                         count > plaintext.Count &&
                         (count % 8) == 0 &&
