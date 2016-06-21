@@ -127,10 +127,16 @@ namespace Pandorum.Core.Cryptography
 
                 var keyBytes = encoding.GetBytes(key); // TODO: Pool array for key/memoize results?
 
-                return EncryptBytes(
+                var result = EncryptBytes(
                     new ArraySegment<byte>(textBytes, 0, byteCount),
                     new ArraySegment<byte>(keyBytes),
                     out count);
+
+                Debug.Assert(count == byteCount,
+                    "Since we made sure to round up the byte count to " +
+                    "a multiple of 8, the end count should be the same");
+
+                return result;
             }
             finally
             {
