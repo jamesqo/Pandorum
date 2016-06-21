@@ -26,13 +26,20 @@ namespace Pandorum.Core.Cryptography
         {
             // Blowfish encrypts 8 bytes at a time
             int leftover = plaintext.Count & 7;
-            count = ((plaintext.Count - 1) & ~7) + 8;
+            count = ((plaintext.Count - 1) & ~7) + 8; // branchless version of: n - (n % 8) + 8
+
+            // if there's leftover we'll need another extra 8 bytes to hold the input
+            // note that this should not be part of the outputted array,
+            // so store it in a new variable
+            int capacity = count + ((leftover - 1) & ~7) + 8;
+
+            Debug.Assert(leftover == 0 ^ capacity != plaintext.Count);
 
             var engine = new BlowfishEngine();
             var keyParameter = new KeyParameter(key.Array, key.Offset, key.Count);
             engine.Init(forEncryption: true, parameters: keyParameter);
 
-            var lease = ArrayPool<byte>.Shared.Lease(count);
+            var lease = ArrayPool<byte>.Shared.Lease(capacity);
 
             try
             {
@@ -50,12 +57,36 @@ namespace Pandorum.Core.Cryptography
                     j += 8;
                 }
 
-                Debug.Assert(i + leftover == plaintext.Count);
+                Debug.Assert(
+                    i + leftover == plaintext.Count &&
+                    leftover >= 0 &&
+                    leftover < 8);
 
                 if (leftover != 0)
                 {
-                    var unprocessedSegment = new ArraySegment<byte>(input, i, leftover);
-                    HandleLeftoverBytes(engine, unprocessedSegment, output, j);
+                    Debug.Assert(
+                        count > plaintext.Count &&
+                        (count % 8) == 0 &&
+                        capacity == count + 8);
+
+                    // Copy over the remaining input data to the end of the output array
+                    int inputIndex = i, outputIndex = j + 8;
+                    while (inputIndex < plaintext.Count)
+                    {
+                        output[outputIndex++] = input[inputIndex++];
+                    }
+
+                    // Since this is a rented array, clear any extraneous data at the end
+                    // Use a regular while loop, since it's less than 8 bytes
+                    Debug.Assert(
+                        outputIndex <= capacity &&
+                        capacity - outputIndex < 8);
+                    while (outputIndex < capacity)
+                    {
+                        output[outputIndex++] = 0;
+                    }
+
+                    engine.ProcessBlock(output, j + 8, output, j);
                 }
             }
             catch
@@ -121,41 +152,6 @@ namespace Pandorum.Core.Cryptography
                     var chars = lease2.Array;
                     return new string(chars, 0, charCount);
                 }
-            }
-        }
-
-        private static void HandleLeftoverBytes(BlowfishEngine engine, ArraySegment<byte> unprocessed, byte[] output, int outputIndex)
-        {
-            byte[] input = unprocessed.Array;
-            int inputIndex = unprocessed.Offset;
-            int leftover = unprocessed.Count;
-
-            Debug.Assert(leftover > 0 && leftover < 8);
-            Debug.Assert(outputIndex + 7 < output.Length);
-
-            // Process the stray bytes
-            var pooled = ArrayPool<byte>.Shared.Rent(8);
-            try
-            {
-                // Copy over the leftover data
-                for (int i = 0; i < leftover; i++)
-                {
-                    pooled[i] = input[inputIndex++];
-                }
-
-                // Clear the remainder of the 8 bytes
-                // (Rented arrays are not always clear)
-                for (int i = 7; i >= leftover; i--)
-                {
-                    pooled[i] = 0;
-                }
-
-                // Leave the null bytes at the end and process
-                engine.ProcessBlock(pooled, 0, output, outputIndex);
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(pooled);
             }
         }
 
