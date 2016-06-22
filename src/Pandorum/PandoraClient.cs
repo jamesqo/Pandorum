@@ -14,22 +14,17 @@ namespace Pandorum
         private IPandoraJsonClient _baseClient;
 
         public PandoraClient()
-            : this(new PandoraClientSettings())
+            : this(new VerifyingJsonClient())
         {
         }
 
-        public PandoraClient(IPandoraClientSettings settings)
-            : this(settings, new VerifyingJsonClient())
+        public PandoraClient(IPandoraJsonClient baseClient)
         {
-        }
-
-        public PandoraClient(IPandoraClientSettings settings, IPandoraJsonClient baseClient)
-        {
-            Settings = settings;
             _baseClient = baseClient;
+            Settings = new PandoraClientSettings(baseClient.Settings);
         }
 
-        public IPandoraClientSettings Settings { get; }
+        public PandoraClientSettings Settings { get; }
 
         // API functionality
 
