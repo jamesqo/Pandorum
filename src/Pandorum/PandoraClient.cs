@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pandorum.Core;
 using Pandorum.Core.Net;
+using Pandorum.Net;
+using Pandorum.Net.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +16,30 @@ namespace Pandorum
         private IPandoraJsonClient _baseClient;
 
         public PandoraClient()
-            : this(new VerifyingJsonClient())
+            : this(PandoraEndpoints.Tuner.HttpsUri,
+                  PandoraEndpoints.Tuner.iOS)
         {
         }
 
-        public PandoraClient(IPandoraJsonClient baseClient)
+        // TODO: Maybe just a PandoraClient(string) ctor should
+        // be added here, but then how would we infer the partnerInfo?
+
+        // Also changes to the endpoint might need to effect changes
+        // to the PartnerInfo in Settings
+
+        public PandoraClient(string endpoint, IPartnerInfo partnerInfo)
+            : this(endpoint, partnerInfo, new VerifyingJsonClient())
+        {
+        }
+
+        public PandoraClient(string endpoint, IPartnerInfo partnerInfo, IPandoraJsonClient baseClient)
         {
             _baseClient = baseClient;
-            Settings = new PandoraClientSettings(baseClient.Settings);
+            Settings = new PandoraClientSettings(baseClient.Settings)
+            {
+                Endpoint = endpoint,
+                PartnerInfo = partnerInfo
+            };
         }
 
         public PandoraClientSettings Settings { get; }

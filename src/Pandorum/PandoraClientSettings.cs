@@ -13,6 +13,9 @@ namespace Pandorum
 
         public PandoraClientSettings(IJsonClientSettings inner)
         {
+            if (inner == null)
+                throw new ArgumentNullException(nameof(inner));
+
             _inner = inner;
         }
 
