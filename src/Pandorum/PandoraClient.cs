@@ -3,6 +3,7 @@ using Pandorum.Core;
 using Pandorum.Core.Net;
 using Pandorum.Net;
 using Pandorum.Net.Authentication;
+using Pandorum.Options.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Pandorum
         {
             return AwaitAndSelectResult(
                 _baseClient.CheckLicensing(),
-                result => (bool)result["isAllowed"]);
+                (result, _) => (bool)result["isAllowed"]);
         }
 
         // TODO: Could we somehow expose the syncTime/auth
@@ -62,24 +63,35 @@ namespace Pandorum
         //
         // unforunately.
 
-        public Task PartnerLogin()
+        public Task PartnerLogin(PartnerLoginOptions options)
         {
             return AwaitAndSelectResult(
-                _baseClient.PartnerLogin())
+                _baseClient.PartnerLogin(options),
+                (result, self) => self.HandlePartnerLogin(result));
+        }
+
+        private void HandlePartnerLogin(JToken result)
+        {
+            var syncTime = (string)result["syncTime"];
         }
 
         // Helpers
 
-        private async static Task AwaitAndSelectResult(Task<JObject> task, Action<JToken> action)
+        private long DecryptSyncTime(string input)
         {
-            var response = await task.ConfigureAwait(false);
-            action(response["result"]);
+
         }
 
-        private async static Task<T> AwaitAndSelectResult<T>(Task<JObject> task, Func<JToken, T> func)
+        private async Task AwaitAndSelectResult(Task<JObject> task, Action<JToken, PandoraClient> action)
         {
             var response = await task.ConfigureAwait(false);
-            return func(response["result"]);
+            action(response["result"], this);
+        }
+
+        private async Task<T> AwaitAndSelectResult<T>(Task<JObject> task, Func<JToken, PandoraClient, T> func)
+        {
+            var response = await task.ConfigureAwait(false);
+            return func(response["result"], this);
         }
         
         // Dispose logic
