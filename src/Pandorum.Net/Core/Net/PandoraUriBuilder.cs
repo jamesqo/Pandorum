@@ -65,9 +65,10 @@ namespace Pandorum.Core.Net
             {
                 sb.Append(Endpoint);
 
+                // Append params in alphabetical order
                 var qb = new QueryBuilder(sb);
-                qb.Add("method", Method);
                 qb.Add("auth_token", AuthToken);
+                qb.Add("method", Method);
                 qb.Add("partner_id", PartnerId);
                 qb.Add("user_id", UserId);
                 return qb.ToString();
