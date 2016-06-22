@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core.Options.Stations
+namespace Pandorum.Options.Stations
 {
-    public class DeleteStationOptions
+    public class TransformSharedStationOptions
     {
         public string StationToken { get; set; }
     }

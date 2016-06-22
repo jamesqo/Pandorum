@@ -44,7 +44,7 @@ namespace Pandorum
 
         public PandoraClientSettings Settings { get; }
 
-        // API functionality
+        // Authentication
 
         public Task<bool> CheckLicensing()
         {
@@ -53,7 +53,28 @@ namespace Pandorum
                 result => (bool)result["isAllowed"]);
         }
 
+        // TODO: Could we somehow expose the syncTime/auth
+        // details to the user without actually logging in?
+        // Async methods can't have ref/out params, so we
+        // can't do something like
+        //
+        // public async Task PartnerLogin(out PartnerLoginInfo info)
+        //
+        // unforunately.
+
+        public Task PartnerLogin()
+        {
+            return AwaitAndSelectResult(
+                _baseClient.PartnerLogin())
+        }
+
         // Helpers
+
+        private async static Task AwaitAndSelectResult(Task<JObject> task, Action<JToken> action)
+        {
+            var response = await task.ConfigureAwait(false);
+            action(response["result"]);
+        }
 
         private async static Task<T> AwaitAndSelectResult<T>(Task<JObject> task, Func<JToken, T> func)
         {

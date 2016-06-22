@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Pandorum.Core.Options;
 using System.Diagnostics;
-using Pandorum.Core.Options.Authentication;
-using Pandorum.Core.Options.Stations;
+using Pandorum.Options.Authentication;
+using Pandorum.Options.Stations;
 
 namespace Pandorum.Core.Net
 {

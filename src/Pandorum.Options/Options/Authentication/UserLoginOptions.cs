@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Pandorum.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core.Options.Authentication
+namespace Pandorum.Options.Authentication
 {
     public class UserLoginOptions
     {
