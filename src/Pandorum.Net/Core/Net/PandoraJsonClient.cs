@@ -72,8 +72,9 @@ namespace Pandorum.Core.Net
             var uri = CreateUriBuilder()
                 .WithMethod("auth.userLogin")
                 .ToString();
-            var body = JsonConvert.SerializeObject(options);
-            body = EncryptToHex(body);
+            var obj = JObject.FromObject(options);
+            obj["syncTime"] = CalculateSyncTime();
+            var body = EncryptToHex(obj.ToString());
             // TODO: Is using PooledStringContent worth the
             // extra Task allocations/complexity here?
             using (var content = new PooledStringContent(body))
