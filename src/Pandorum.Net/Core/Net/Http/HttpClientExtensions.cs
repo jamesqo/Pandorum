@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core.Net
+namespace Pandorum.Core.Net.Http
 {
     public static class HttpClientExtensions
     {
