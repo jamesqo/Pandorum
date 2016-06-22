@@ -22,26 +22,23 @@ namespace Pandorum.Core.Net
     {
         private HttpClient _httpClient;
 
-        public PandoraJsonClient(string endpoint)
-            : this(endpoint, PandoraEndpoints.Tuner.iOS)
+        public PandoraJsonClient()
+            : this(new JsonClientSettings())
         {
         }
 
-        public PandoraJsonClient(string endpoint, IPartnerInfo partnerInfo)
-            : this(endpoint, partnerInfo, new HttpClient())
+        public PandoraJsonClient(JsonClientSettings settings)
+            : this(settings, new HttpClient())
         {
         }
 
-        public PandoraJsonClient(string endpoint, IPartnerInfo partnerInfo, HttpClient baseClient)
+        public PandoraJsonClient(IJsonClientSettings settings, HttpClient baseClient)
         {
-            Endpoint = endpoint;
-            PartnerInfo = partnerInfo;
+            Settings = settings;
             _httpClient = baseClient;
         }
 
-        public string Endpoint { get; set; }
-        public IPartnerInfo PartnerInfo { get; set; }
-        public long SyncTimestamp { get; set; }
+        public IJsonClientSettings Settings { get; }
 
         // API functionality
 
@@ -71,7 +68,7 @@ namespace Pandorum.Core.Net
                 .WithMethod("auth.userLogin")
                 .ToString();
             var body = JsonConvert.SerializeObject(options);
-            body = BlowfishEcb.EncryptStringToHex(body, PartnerInfo.EncryptPassword);
+            body = BlowfishEcb.EncryptStringToHex(body, Settings.PartnerInfo.EncryptPassword);
             return LoadContentAndReturn(body,
                 content => _httpClient.PostAndReadJsonAsync(uri, content));
         }
@@ -80,12 +77,12 @@ namespace Pandorum.Core.Net
 
         private PandoraUriBuilder CreateUriBuilder()
         {
-            return new PandoraUriBuilder(Endpoint);
+            return new PandoraUriBuilder(Settings.Endpoint);
         }
 
         private long CalculateSyncTime()
         {
-            return DateTimeOffset.UtcNow.ToUnixTime() + SyncTimestamp;
+            return DateTimeOffset.UtcNow.ToUnixTime() + Settings.SyncTimestamp;
         }
 
         // TODO: PooledStringContent so we can use a simple using statement

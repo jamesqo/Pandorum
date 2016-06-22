@@ -11,6 +11,8 @@ namespace Pandorum.Core.Net
 {
     public interface IPandoraJsonClient : IDisposable
     {
+        IJsonClientSettings Settings { get; }
+
         Task<JObject> CheckLicensing();
         Task<JObject> PartnerLogin(PartnerLoginOptions options);
         Task<JObject> UserLogin(UserLoginOptions options);

@@ -16,8 +16,13 @@ namespace Pandorum.Core.Net
 
         public VerifyingJsonClient(IPandoraJsonClient inner)
         {
+            if (inner == null)
+                throw new ArgumentNullException(nameof(inner));
+
             _inner = inner;
         }
+
+        public IJsonClientSettings Settings => _inner.Settings;
 
         public Task<JObject> CheckLicensing()
         {
