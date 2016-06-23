@@ -17,7 +17,7 @@ namespace Pandorum.Samples.UserLogin
             using (var client = new PandoraClient())
             {
                 await client.PartnerLogin();
-                await client.UserLogin("YOUR_EMAIL", "YOUR_PASSWORD");
+                await client.UserLogin("YOUR_EMAIL", "YOUR_PASSWORD"); // Please don't commit this!
             }
         }
     }
