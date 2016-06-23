@@ -67,6 +67,12 @@ namespace Pandorum
                 (result, _) => (bool)result["isAllowed"]);
         }
 
+        public async Task Login(string username, string password)
+        {
+            await PartnerLogin().ConfigureAwait(false);
+            await UserLogin(username, password).ConfigureAwait(false);
+        }
+
         // Partner login
 
         // TODO: Could we somehow expose the syncTime/auth
