@@ -56,20 +56,16 @@ namespace Pandorum.Core.Net
             return _httpClient.GetJsonAsync(uri);
         }
 
-        public async Task<JObject> PartnerLogin(PartnerLoginOptions options)
+        public Task<JObject> PartnerLogin(PartnerLoginOptions options)
         {
             var uri = CreateUriBuilder()
                 .WithMethod("auth.partnerLogin")
                 .ToString();
             var body = SerializeObject(options, includeSyncTime: false, includeAuthToken: false);
-            // POST body for partner login isn't encrypted
-            using (var content = new PooledStringContent(body))
-            {
-                return await _httpClient.PostAndReadJsonAsync(uri, content).ConfigureAwait(false);
-            }
+            return PostAndReadJson(uri, body, encrypt: false); // POST body for partner login isn't encrypted
         }
 
-        public async Task<JObject> UserLogin(UserLoginOptions options)
+        public Task<JObject> UserLogin(UserLoginOptions options)
         {
             var uri = CreateUriBuilder()
                 .WithMethod("auth.userLogin")
@@ -77,13 +73,7 @@ namespace Pandorum.Core.Net
                 .WithPartnerId(Settings.PartnerId)
                 .ToString();
             var body = SerializeObject(options, includeSyncTime: true, includeAuthToken: false);
-            body = EncryptToHex(body);
-            // TODO: Is using PooledStringContent worth the
-            // extra Task allocations/complexity here?
-            using (var content = new PooledStringContent(body))
-            {
-                return await _httpClient.PostAndReadJsonAsync(uri, content).ConfigureAwait(false);
-            }
+            return PostAndReadJson(uri, body);
         }
 
         // Helpers
@@ -122,6 +112,31 @@ namespace Pandorum.Core.Net
             return jobject.ToString();
         }
 
+        private string CreateUriFromMethod(string method)
+        {
+            return CreateUriBuilder()
+                .WithMethod(method)
+                .WithAuthToken(Settings.AuthToken)
+                .WithPartnerId(Settings.PartnerId)
+                .WithUserId(Settings.UserId)
+                .ToString();
+        }
+
+        private async Task<JObject> PostAndReadJson(string uri, string body, bool encrypt = true)
+        {
+            if (encrypt)
+            {
+                body = EncryptToHex(body);
+            }
+
+            // TODO: Is using PooledStringContent worth the
+            // extra Task allocations/complexity here? (I think so)
+            using (var content = new PooledStringContent(body))
+            {
+                return await _httpClient.PostAndReadJsonAsync(uri, content).ConfigureAwait(false);
+            }
+        }
+
         // Dispose logic
 
         public void Dispose() => Dispose(true);
@@ -148,7 +163,9 @@ namespace Pandorum.Core.Net
 
         public Task<JObject> GetStationListChecksum()
         {
-            throw new NotImplementedException();
+            var uri = CreateUriFromMethod("user.getStationListChecksum");
+            var body = SerializeObject(new object()); // TODO: Cache this
+            return PostAndReadJson(uri, body);
         }
 
         public Task<JObject> Search(SearchOptions options)
