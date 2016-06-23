@@ -156,7 +156,7 @@ namespace Pandorum.Core.Net
         public Task<JObject> GetStationListChecksum()
         {
             var uri = CreateUri("user.getStationListChecksum");
-            var body = SerializeObject(new object()); // TODO: Cache this
+            var body = SerializeObject(ImmutableCache.EmptyObject);
             return PostAndReadJson(uri, body);
         }
 
