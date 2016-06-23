@@ -15,7 +15,7 @@ using Pandorum.Stations;
 
 namespace Pandorum
 {
-    public class PandoraClient : IDisposable
+    public class PandoraClient : IAsyncClient, IDisposable
     {
         internal IPandoraJsonClient _baseClient;
 
@@ -74,7 +74,7 @@ namespace Pandorum
 
         public Task<bool> CheckLicensing()
         {
-            return AwaitAndSelectResult(
+            return this.AwaitAndSelectResult(
                 _baseClient.CheckLicensing(),
                 (result, _) => (bool)result["isAllowed"]);
         }
@@ -98,7 +98,7 @@ namespace Pandorum
 
         public Task PartnerLogin()
         {
-            return AwaitAndSelectResult(
+            return this.AwaitAndSelectResult(
                 _baseClient.PartnerLogin(CreatePartnerLoginOptions()),
                 (result, self) => self.HandlePartnerLogin(result));
         }
@@ -136,7 +136,7 @@ namespace Pandorum
 
         public Task UserLogin(string username, string password)
         {
-            return AwaitAndSelectResult(
+            return this.AwaitAndSelectResult(
                 _baseClient.UserLogin(CreateUserLoginOptions(username, password)),
                 (result, self) => self.HandleUserLogin(result));
         }
@@ -167,18 +167,6 @@ namespace Pandorum
             var decryptedString = BlowfishEcb.DecryptHexToString(input, Settings.PartnerInfo.DecryptPassword);
             decryptedString = decryptedString.Substring(4); // skip first four bytes of garbage
             return long.Parse(decryptedString.Replace("\u0002", string.Empty)); // TODO: Can other control chars appear at the end?
-        }
-
-        private async Task AwaitAndSelectResult(Task<JObject> task, Action<JToken, PandoraClient> action)
-        {
-            var response = await task.ConfigureAwait(false);
-            action(response["result"], this);
-        }
-
-        private async Task<T> AwaitAndSelectResult<T>(Task<JObject> task, Func<JToken, PandoraClient, T> func)
-        {
-            var response = await task.ConfigureAwait(false);
-            return func(response["result"], this);
         }
         
         // Dispose logic
