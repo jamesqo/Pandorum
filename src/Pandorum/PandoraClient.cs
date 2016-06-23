@@ -60,6 +60,10 @@ namespace Pandorum
 
         // Authentication
 
+        // TODO: Make all of these accept opaque types
+        // and have these overloads implemented as
+        // extension methods.
+
         public Task<bool> CheckLicensing()
         {
             return AwaitAndSelectResult(
