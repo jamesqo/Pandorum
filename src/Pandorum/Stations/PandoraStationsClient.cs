@@ -27,11 +27,6 @@ namespace Pandorum.Stations
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PandoraCategory>> GenreStations()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IEnumerable<PandoraStation>> List()
         {
             throw new NotImplementedException();
