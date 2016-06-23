@@ -8,7 +8,10 @@ namespace Pandorum.Core.Time
     // TODO: We can remove this once we move to .NET 4.6,
     // as that adds built-in support for Unix time
 
-    internal static class DateTimeOffsetExtensions
+    // TODO: Make this an internal class/move to another
+    // assembly
+
+    public static class DateTimeOffsetExtensions
     {
         private static readonly DateTimeOffset s_unixEpoch =
             new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);

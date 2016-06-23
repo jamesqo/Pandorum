@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pandorum.Core;
+using Pandorum.Core.Cryptography;
 using Pandorum.Core.Net;
+using Pandorum.Core.Time;
 using Pandorum.Net;
 using Pandorum.Net.Authentication;
 using Pandorum.Options.Authentication;
@@ -35,6 +37,17 @@ namespace Pandorum
 
         public PandoraClient(string endpoint, IPartnerInfo partnerInfo, IPandoraJsonClient baseClient)
         {
+            if (endpoint == null || partnerInfo == null || baseClient == null)
+            {
+                string paramName = (endpoint == null) ?
+                    nameof(endpoint) :
+                    (partnerInfo == null) ?
+                    nameof(partnerInfo) :
+                    nameof(baseClient);
+
+                throw new ArgumentNullException(paramName);
+            }
+
             _baseClient = baseClient;
             Settings = new PandoraClientSettings(baseClient.Settings)
             {
@@ -72,14 +85,27 @@ namespace Pandorum
 
         private void HandlePartnerLogin(JToken result)
         {
+            // First parse the syncTime, subtract it from the
+            // current Unix time, and set the SyncTimestamp
             var syncTime = (string)result["syncTime"];
+            var parsedTimestamp = DateTimeOffset.UtcNow.ToUnixTime() - DecryptSyncTime(syncTime);
+            var settings = _baseClient.Settings; // cache interface method call
+            // TODO: Maybe this 'violates the contract' of the interface, e.g.
+            // you could have a IJsonClientSettings that when set_SyncTimestamp
+            // was called changed the value of _baseClient.Settings
+            settings.SyncTimestamp = parsedTimestamp;
+
+            // Set partner_id, auth_token
+            settings.AuthToken = (string)result["partnerAuthToken"];
+            settings.PartnerId = (string)result["partnerId"];
         }
 
         // Helpers
 
         private long DecryptSyncTime(string input)
         {
-
+            var decryptedString = BlowfishEcb.DecryptHexToString(input, Settings.PartnerInfo.DecryptPassword);
+            return long.Parse(decryptedString);
         }
 
         private async Task AwaitAndSelectResult(Task<JObject> task, Action<JToken, PandoraClient> action)
