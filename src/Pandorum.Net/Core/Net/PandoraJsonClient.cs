@@ -129,6 +129,17 @@ namespace Pandorum.Core.Net
             }
         }
 
+        // Aggregator method that enscapulates common workflow
+        // Create URI -> Serialize options -> encrypt -> send POST
+        // request -> parse as JObject
+        // TODO: Find a better name for this?
+        private Task<JObject> TypicalWorkflow(string method, object options)
+        {
+            var uri = CreateUri(method);
+            var body = SerializeObject(options);
+            return PostAndReadJson(uri, body);
+        }
+
         // Dispose logic
 
         public void Dispose() => Dispose(true);
@@ -150,81 +161,78 @@ namespace Pandorum.Core.Net
 
         public Task<JObject> GetStationList(GetStationListOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("user.getStationList", options);
         }
 
         public Task<JObject> GetStationListChecksum()
         {
-            var uri = CreateUri("user.getStationListChecksum");
-            var body = SerializeObject(ImmutableCache.EmptyObject);
-            return PostAndReadJson(uri, body);
+            // No options to pass in, so substitute with an empty object
+            return TypicalWorkflow("user.getStationListChecksum", ImmutableCache.EmptyObject);
         }
 
         public Task<JObject> Search(SearchOptions options)
         {
-            var uri = CreateUri("music.search");
-            var body = SerializeObject(options);
-            return PostAndReadJson(uri, body);
+            return TypicalWorkflow("music.search", options);
         }
 
         public Task<JObject> CreateStation(CreateStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.createStation", options);
         }
 
         public Task<JObject> AddMusic(AddMusicOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.addMusic", options);
         }
 
         public Task<JObject> DeleteMusic(DeleteMusicOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.deleteMusic", options);
         }
 
         public Task<JObject> RenameStation(RenameStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.renameStation", options);
         }
 
         public Task<JObject> DeleteStation(DeleteStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.deleteStation", options);
         }
 
         public Task<JObject> GetStation(GetStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.getStation", options);
         }
 
         public Task<JObject> DeleteFeedback(DeleteFeedbackOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.deleteFeedback", options);
         }
 
         public Task<JObject> GetGenreStations()
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.getGenreStations", ImmutableCache.EmptyObject);
         }
 
         public Task<JObject> GetGenreStationsChecksum(GetGenreStationsChecksumOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.getGenreStationsChecksum", options);
         }
 
         public Task<JObject> ShareStation(ShareStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.shareStation", options);
         }
 
         public Task<JObject> TransformSharedStation(TransformSharedStationOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("station.transformSharedStation", options);
         }
 
         public Task<JObject> SetQuickMix(SetQuickMixOptions options)
         {
-            throw new NotImplementedException();
+            return TypicalWorkflow("user.setQuickMix", options);
         }
     }
 }
