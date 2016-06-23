@@ -117,7 +117,8 @@ namespace Pandorum
         private long DecryptSyncTime(string input)
         {
             var decryptedString = BlowfishEcb.DecryptHexToString(input, Settings.PartnerInfo.DecryptPassword);
-            return long.Parse(decryptedString);
+            decryptedString = decryptedString.Substring(4); // skip first four bytes of garbage
+            return long.Parse(decryptedString.Replace("\u0002", string.Empty)); // TODO: Can other control chars appear at the end?
         }
 
         private async Task AwaitAndSelectResult(Task<JObject> task, Action<JToken, PandoraClient> action)

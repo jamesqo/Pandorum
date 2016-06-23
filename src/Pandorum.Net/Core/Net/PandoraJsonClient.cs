@@ -106,7 +106,8 @@ namespace Pandorum.Core.Net
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Converters = { new OptionalBoolConverter() }
+                Converters = { new OptionalBoolConverter() },
+                DefaultValueHandling = DefaultValueHandling.Ignore
             };
             var serializer = JsonSerializer.CreateDefault(settings);
             var jobject = JObject.FromObject(obj, serializer);
