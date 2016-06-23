@@ -17,6 +17,8 @@ using Pandorum.Core.Time;
 using Pandorum.Core.Options.Stations;
 using Pandorum.Core.Net.Http;
 using System.Net.Http.Headers;
+using Pandorum.Core.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Pandorum.Core.Net
 {
@@ -59,7 +61,7 @@ namespace Pandorum.Core.Net
             var uri = CreateUriBuilder()
                 .WithMethod("auth.partnerLogin")
                 .ToString();
-            var body = JsonConvert.SerializeObject(options);
+            var body = SerializeObject(options, includeSyncTime: false, includeAuthToken: false);
             // POST body for partner login isn't encrypted
             using (var content = new PooledStringContent(body))
             {
@@ -72,9 +74,8 @@ namespace Pandorum.Core.Net
             var uri = CreateUriBuilder()
                 .WithMethod("auth.userLogin")
                 .ToString();
-            var obj = JObject.FromObject(options);
-            obj["syncTime"] = CalculateSyncTime();
-            var body = EncryptToHex(obj.ToString());
+            var body = SerializeObject(options, includeSyncTime: true, includeAuthToken: false);
+            body = EncryptToHex(body);
             // TODO: Is using PooledStringContent worth the
             // extra Task allocations/complexity here?
             using (var content = new PooledStringContent(body))
@@ -98,6 +99,24 @@ namespace Pandorum.Core.Net
         private long CalculateSyncTime()
         {
             return DateTimeOffset.UtcNow.ToUnixTime() + Settings.SyncTimestamp;
+        }
+
+        private string SerializeObject(object obj, bool includeSyncTime = true, bool includeAuthToken = true)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = { new OptionalBoolConverter() }
+            };
+            var serializer = JsonSerializer.CreateDefault(settings);
+            var jobject = JObject.FromObject(obj, serializer);
+
+            if (includeSyncTime)
+                jobject["syncTime"] = CalculateSyncTime();
+            if (includeAuthToken)
+                jobject["userAuthToken"] = Settings.AuthToken;
+
+            return jobject.ToString();
         }
 
         // Dispose logic
