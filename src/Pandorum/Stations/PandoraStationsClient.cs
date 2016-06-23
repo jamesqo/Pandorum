@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pandorum.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class PandoraStationsClient
+    public class PandoraStationsClient : IAsyncClient
     {
         private readonly PandoraClient _inner;
 
@@ -24,7 +25,9 @@ namespace Pandorum.Stations
 
         public Task<string> Checksum()
         {
-            throw new NotImplementedException();
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetStationListChecksum(),
+                (result, _) => (string)result["checksum"]);
         }
 
         public Task<IEnumerable<PandoraStation>> List()
