@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Options.Stations
+namespace Pandorum.Core.Options.Stations
 {
-    public class DeleteStationOptions
+    public class GetStationOptions
     {
         public string StationToken { get; set; }
+        public bool IncludeExtendedAttributes { get; set; }
     }
 }

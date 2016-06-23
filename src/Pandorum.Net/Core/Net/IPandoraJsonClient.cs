@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
-using Pandorum.Options;
-using Pandorum.Options.Authentication;
-using Pandorum.Options.Stations;
+using Pandorum.Core.Options;
+using Pandorum.Core.Options.Authentication;
+using Pandorum.Core.Options.Stations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

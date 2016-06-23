@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Options.Authentication
+namespace Pandorum.Core.Options.Authentication
 {
     public class UserLoginOptions
     {

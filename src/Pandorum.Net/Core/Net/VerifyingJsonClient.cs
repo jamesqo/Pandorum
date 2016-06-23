@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
-using Pandorum.Options.Authentication;
-using Pandorum.Options.Stations;
+using Pandorum.Core.Options.Authentication;
+using Pandorum.Core.Options.Stations;
 
 namespace Pandorum.Core.Net
 {

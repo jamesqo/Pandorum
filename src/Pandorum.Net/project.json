@@ -7,10 +7,10 @@
     "Pandorum.Core.Cryptography": {
       "target": "project"
     },
-    "Pandorum.Core.Pooling": {
+    "Pandorum.Core.Optional": {
       "target": "project"
     },
-    "Pandorum.Options": {
+    "Pandorum.Core.Pooling": {
       "target": "project"
     },
     "System.Net.Http": "4.0.1-rc2-24027"
