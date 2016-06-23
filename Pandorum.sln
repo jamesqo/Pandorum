@@ -38,6 +38,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Samples.CheckLicen
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Options", "src\Pandorum.Options\Pandorum.Options.xproj", "{400703D1-0E2C-45B8-9DDB-E4AFEFE27F9A}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Pandorum.Samples.PartnerLogin", "samples\debugging\Pandorum.Samples.PartnerLogin\Pandorum.Samples.PartnerLogin.xproj", "{51DAE71C-168A-4DC8-82FE-FBD57664F44C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{400703D1-0E2C-45B8-9DDB-E4AFEFE27F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{400703D1-0E2C-45B8-9DDB-E4AFEFE27F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{400703D1-0E2C-45B8-9DDB-E4AFEFE27F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51DAE71C-168A-4DC8-82FE-FBD57664F44C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51DAE71C-168A-4DC8-82FE-FBD57664F44C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51DAE71C-168A-4DC8-82FE-FBD57664F44C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51DAE71C-168A-4DC8-82FE-FBD57664F44C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +111,6 @@ Global
 		{570E0E24-1FDF-4482-9E05-FD28DCA39A53} = {38884D3D-5059-4066-84AC-D21355B324A6}
 		{3FC2BED1-2033-414D-BBB6-59558B3906C6} = {570E0E24-1FDF-4482-9E05-FD28DCA39A53}
 		{400703D1-0E2C-45B8-9DDB-E4AFEFE27F9A} = {060D0688-A2B6-4170-9C24-F566C330E6A9}
+		{51DAE71C-168A-4DC8-82FE-FBD57664F44C} = {570E0E24-1FDF-4482-9E05-FD28DCA39A53}
 	EndGlobalSection
 EndGlobal
