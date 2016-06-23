@@ -56,7 +56,7 @@ namespace Pandorum.Core.Cryptography
 
                 for (int i = 0; i < count; i += 8)
                 {
-                    engine.ProcessBlock(encryptBuffer, ciphertext.Offset, decryptBuffer, i);
+                    engine.ProcessBlock(encryptBuffer, ciphertext.Offset + i, decryptBuffer, i);
                 }
             }
             catch
