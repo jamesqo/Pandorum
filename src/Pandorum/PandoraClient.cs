@@ -5,7 +5,7 @@ using Pandorum.Core.Net;
 using Pandorum.Core.Time;
 using Pandorum.Net;
 using Pandorum.Net.Authentication;
-using Pandorum.Options.Authentication;
+using Pandorum.Core.Options.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,11 +76,23 @@ namespace Pandorum
         //
         // unforunately.
 
-        public Task PartnerLogin(PartnerLoginOptions options)
+        public Task PartnerLogin()
         {
             return AwaitAndSelectResult(
-                _baseClient.PartnerLogin(options),
+                _baseClient.PartnerLogin(CreatePartnerLoginOptions()),
                 (result, self) => self.HandlePartnerLogin(result));
+        }
+
+        private PartnerLoginOptions CreatePartnerLoginOptions()
+        {
+            return new PartnerLoginOptions
+            {
+                Username = Settings.PartnerInfo.Username,
+                Password = Settings.PartnerInfo.Password,
+                DeviceModel = Settings.PartnerInfo.DeviceId,
+                Version = "5" // hard-coded, for now it's 5
+                // TODO: Other parameters
+            };
         }
 
         private void HandlePartnerLogin(JToken result)
