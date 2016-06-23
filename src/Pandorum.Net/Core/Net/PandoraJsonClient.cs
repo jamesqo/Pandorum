@@ -50,28 +50,20 @@ namespace Pandorum.Core.Net
 
         public Task<JObject> CheckLicensing()
         {
-            var uri = CreateUriBuilder()
-                .WithMethod("test.checkLicensing")
-                .ToString();
+            var uri = CreateUri("test.checkLicensing");
             return _httpClient.GetJsonAsync(uri);
         }
 
         public Task<JObject> PartnerLogin(PartnerLoginOptions options)
         {
-            var uri = CreateUriBuilder()
-                .WithMethod("auth.partnerLogin")
-                .ToString();
+            var uri = CreateUri("auth.partnerLogin");
             var body = SerializeObject(options, includeSyncTime: false, includeAuthToken: false);
             return PostAndReadJson(uri, body, encrypt: false); // POST body for partner login isn't encrypted
         }
 
         public Task<JObject> UserLogin(UserLoginOptions options)
         {
-            var uri = CreateUriBuilder()
-                .WithMethod("auth.userLogin")
-                .WithAuthToken(Settings.AuthToken)
-                .WithPartnerId(Settings.PartnerId)
-                .ToString();
+            var uri = CreateUri("auth.userLogin");
             var body = SerializeObject(options, includeSyncTime: true, includeAuthToken: false);
             return PostAndReadJson(uri, body);
         }
@@ -112,7 +104,7 @@ namespace Pandorum.Core.Net
             return jobject.ToString();
         }
 
-        private string CreateUriFromMethod(string method)
+        private string CreateUri(string method)
         {
             return CreateUriBuilder()
                 .WithMethod(method)
@@ -163,14 +155,16 @@ namespace Pandorum.Core.Net
 
         public Task<JObject> GetStationListChecksum()
         {
-            var uri = CreateUriFromMethod("user.getStationListChecksum");
+            var uri = CreateUri("user.getStationListChecksum");
             var body = SerializeObject(new object()); // TODO: Cache this
             return PostAndReadJson(uri, body);
         }
 
         public Task<JObject> Search(SearchOptions options)
         {
-            throw new NotImplementedException();
+            var uri = CreateUri("music.search");
+            var body = SerializeObject(options);
+            return PostAndReadJson(uri, body);
         }
 
         public Task<JObject> CreateStation(CreateStationOptions options)
