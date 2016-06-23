@@ -26,12 +26,12 @@ namespace Pandorum.Core.Cryptography
         {
             // Blowfish encrypts 8 bytes at a time
             int leftover = plaintext.Count & 7;
-            count = ((plaintext.Count - 1) & ~7) + 8; // branchless version of: n - (n % 8) + 8
+            count = (plaintext.Count + 7) & ~7; // branchless version of: n - (n % 8) + 8
 
             // if there's leftover we'll need another extra 8 bytes to hold the input
             // note that this should not be part of the outputted array,
             // so store it in a new variable
-            int capacity = count + ((leftover - 1) & ~7) + 8;
+            int capacity = count + ((leftover + 7) & ~7);
 
             Debug.Assert(leftover == 0 ^ capacity != plaintext.Count);
 
