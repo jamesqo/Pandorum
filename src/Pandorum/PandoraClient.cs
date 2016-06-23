@@ -11,12 +11,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Pandorum.Stations;
 
 namespace Pandorum
 {
     public class PandoraClient : IDisposable
     {
-        private IPandoraJsonClient _baseClient;
+        internal IPandoraJsonClient _baseClient;
+
+        private PandoraStationsClient _stations;
 
         public PandoraClient()
             : this(PandoraEndpoints.Tuner.HttpsUri,
@@ -57,6 +60,11 @@ namespace Pandorum
         }
 
         public PandoraClientSettings Settings { get; }
+
+        // Entry point for other clients
+
+        public PandoraStationsClient Stations =>
+            _stations ?? (_stations = new PandoraStationsClient(this));
 
         // Authentication
 
