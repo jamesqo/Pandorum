@@ -67,6 +67,8 @@ namespace Pandorum
                 (result, _) => (bool)result["isAllowed"]);
         }
 
+        // Partner login
+
         // TODO: Could we somehow expose the syncTime/auth
         // details to the user without actually logging in?
         // Async methods can't have ref/out params, so we
@@ -110,6 +112,34 @@ namespace Pandorum
             // Set partner_id, auth_token
             settings.AuthToken = (string)result["partnerAuthToken"];
             settings.PartnerId = (string)result["partnerId"];
+        }
+
+        // User login
+
+        public Task UserLogin(string username, string password)
+        {
+            return AwaitAndSelectResult(
+                _baseClient.UserLogin(CreateUserLoginOptions(username, password)),
+                (result, self) => self.HandleUserLogin(result));
+        }
+
+        private UserLoginOptions CreateUserLoginOptions(string username, string password)
+        {
+            return new UserLoginOptions
+            {
+                LoginType = "user",
+                Username = username,
+                Password = password,
+                PartnerAuthToken = _baseClient.Settings.AuthToken
+                // TODO: ReturnCapped = true
+            };
+        }
+
+        private void HandleUserLogin(JToken result)
+        {
+            // Overwrite the partnerAuthToken with userAuthToken
+            _baseClient.Settings.AuthToken = (string)result["userAuthToken"];
+            _baseClient.Settings.UserId = (string)result["userId"];
         }
 
         // Helpers

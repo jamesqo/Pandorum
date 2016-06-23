@@ -14,5 +14,7 @@ namespace Pandorum.Core.Net
         public long SyncTimestamp { get; set; }
         public string AuthToken { get; set; }
         public string PartnerId { get; set; }
+
+        public string UserId { get; set; }
     }
 }

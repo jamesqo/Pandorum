@@ -15,5 +15,8 @@ namespace Pandorum.Core.Net
         long SyncTimestamp { get; set; }
         string AuthToken { get; set; } // replaced by the user authToken upon user login
         string PartnerId { get; set; }
+
+        // Received from user login
+        string UserId { get; set; }
     }
 }

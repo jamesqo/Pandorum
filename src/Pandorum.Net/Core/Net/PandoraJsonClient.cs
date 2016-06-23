@@ -73,6 +73,8 @@ namespace Pandorum.Core.Net
         {
             var uri = CreateUriBuilder()
                 .WithMethod("auth.userLogin")
+                .WithAuthToken(Settings.AuthToken)
+                .WithPartnerId(Settings.PartnerId)
                 .ToString();
             var body = SerializeObject(options, includeSyncTime: true, includeAuthToken: false);
             body = EncryptToHex(body);
