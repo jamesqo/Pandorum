@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Seed
+    internal interface ISeed
     {
-        internal string MusicToken { get; }
+        string MusicToken { get; }
     }
 }

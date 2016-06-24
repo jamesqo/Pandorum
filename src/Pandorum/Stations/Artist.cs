@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Artist : Seed
+    public class Artist : ISeed
     {
     }
 }
