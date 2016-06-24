@@ -5,14 +5,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Core
+namespace Pandorum.Core.Json
 {
-    internal static class AsyncClientExtensions
+    internal static class JsonProcessorExtensions
     {
         // TODO: Better name? These methods don't exactly scream JSON
 
         public async static Task AwaitAndSelectResult<T>(this T client, Task<JObject> task, Action<JToken, T> action)
-            where T : IAsyncClient
+            where T : IJsonProcessor
         {
             Debug.Assert(client != null);
 
@@ -21,7 +21,7 @@ namespace Pandorum.Core
         }
 
         public async static Task<TOutput> AwaitAndSelectResult<T, TOutput>(this T client, Task<JObject> task, Func<JToken, T, TOutput> func)
-            where T : IAsyncClient
+            where T : IJsonProcessor
         {
             Debug.Assert(client != null);
 
