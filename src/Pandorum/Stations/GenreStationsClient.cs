@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pandorum.Core.Json;
+using Pandorum.Core.Options.Stations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class GenreStationsClient
+    public class GenreStationsClient : IJsonProcessor
     {
         private readonly PandoraClient _inner;
 
@@ -19,12 +21,20 @@ namespace Pandorum.Stations
 
         public Task<string> Checksum()
         {
-            throw new NotImplementedException();
+            var options = CreateChecksumOptions();
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetGenreStationsChecksum(options),
+                (result, _) => (string)result["checksum"]);
         }
 
         public Task<IEnumerable<Category>> List()
         {
             throw new NotImplementedException();
+        }
+
+        private static GetGenreStationsChecksumOptions CreateChecksumOptions()
+        {
+            return new GetGenreStationsChecksumOptions();
         }
     }
 }

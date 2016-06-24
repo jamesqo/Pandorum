@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Pandorum.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,16 +11,13 @@ namespace Pandorum.Stations
     public class SearchResults
     {
         [JsonConstructor] // used by Json.NET
-        private SearchResults(
-            IEnumerable<Song> songs,
-            IEnumerable<Artist> artists,
-            IEnumerable<GenreStation> genreStations)
+        private SearchResults(Song[] songs, Artist[] artists, GenreStation[] genreStations)
         {
             Debug.Assert(songs != null && artists != null && genreStations != null);
 
-            Songs = songs;
-            Artists = artists;
-            GenreStations = genreStations;
+            Songs = songs.AsReadOnly();
+            Artists = artists.AsReadOnly();
+            GenreStations = genreStations.AsReadOnly();
         }
 
         public IEnumerable<Song> Songs { get; }
