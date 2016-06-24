@@ -19,7 +19,7 @@ namespace Pandorum
     {
         internal IPandoraJsonClient _baseClient;
 
-        private PandoraStationsClient _stations;
+        private StationsClient _stations;
 
         public PandoraClient()
             : this(PandoraEndpoints.Tuner.HttpsUri,
@@ -63,8 +63,8 @@ namespace Pandorum
 
         // Entry point for other clients
 
-        public PandoraStationsClient Stations =>
-            _stations ?? (_stations = new PandoraStationsClient(this));
+        public StationsClient Stations =>
+            _stations ?? (_stations = new StationsClient(this));
 
         // Authentication
 
