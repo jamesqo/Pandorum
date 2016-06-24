@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pandorum.Core.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,6 @@ namespace Pandorum.Core.Json
 {
     public class PandoraTimeConverter : JsonConverter
     {
-        private static readonly DateTimeOffset s_unixEpoch =
-            new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
         // Only used for deserialization so far
         public override bool CanWrite => false;
 
@@ -23,22 +21,14 @@ namespace Pandorum.Core.Json
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-            var unixTime = (long)obj["time"];
-            var offset = TranslateUnixTimeMillis(unixTime);
+            var milliseconds = (long)obj["time"];
+            var offset = DateTimeHelpers.FromUnixTime(milliseconds / 1000);
             return offset;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotSupportedException();
-        }
-
-        // This can be removed once we target .NET 4.6, since
-        // that intros DateTimeOffset.FromUnixTimeMilliseconds
-        // TODO: Move this into Pandorum.Core.Time (Common subdir?)
-        private static DateTimeOffset TranslateUnixTimeMillis(long unixTime)
-        {
-            return s_unixEpoch.AddMilliseconds(unixTime);
         }
     }
 }

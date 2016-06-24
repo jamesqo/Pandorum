@@ -57,10 +57,12 @@ namespace Pandorum.Stations
 
         private static SearchOptions CreateSearchOptions(string searchText)
         {
-            var options = new SearchOptions();
-            options.SearchText = searchText;
-            // TODO: Other parameters
-            return options;
+            return new SearchOptions
+            {
+                SearchText = searchText,
+                IncludeGenreStations = true,
+                IncludeNearMatches = true,
+            };
         }
 
         private static GetStationListOptions CreateStationListOptions()

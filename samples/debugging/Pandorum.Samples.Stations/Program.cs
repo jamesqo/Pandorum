@@ -34,6 +34,31 @@ namespace Pandorum.Samples.Stations
                         Console.WriteLine($"Date created: {station.DateCreated}");
                         index++;
                     }
+
+                    string query = Environment.GetEnvironmentVariable("PANDORUM_QUERY") ?? "The Weeknd";
+                    Console.WriteLine($"Searching for {query}...");
+                    var results = await client.Stations.Search(query);
+
+                    Console.WriteLine("Artists:");
+                    foreach (var artist in results.Artists)
+                    {
+                        Console.WriteLine($"Name: {artist.Name}, Score: {artist.Score}");
+                    }
+
+                    Console.WriteLine("Songs:");
+                    foreach (var song in results.Songs)
+                    {
+                        Console.WriteLine($"Name: {song.Name}, Score: {song.Score}, Artist: {song.ArtistName}");
+                    }
+
+                    if (results.GenreStations != null)
+                    {
+                        Console.WriteLine("Stations:");
+                        foreach (var station in results.GenreStations)
+                        {
+                            Console.WriteLine($"Name: {station.Name}, Score: {station.Score}");
+                        }
+                    }
                 }
             });
         }
