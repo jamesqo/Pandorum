@@ -24,20 +24,26 @@ namespace Pandorum.Core.Json
             return token.ToObject<T[]>().AsReadOnly();
         }
 
-        public static IEnumerable<T> ToEnumerable<T>(this JToken token, SerializationOptions options)
+        public static IEnumerable<T> ToEnumerable<T>(this JToken token, SerializationOptions options, params JsonConverter[] converters)
         {
-            return token.ToObject<T[]>(options).AsReadOnly();
+            return token.ToObject<T[]>(options, converters).AsReadOnly();
         }
 
-        public static T ToObject<T>(this JToken token, SerializationOptions options)
+        public static T ToObject<T>(this JToken token, SerializationOptions options, params JsonConverter[] converters)
+        {
+            var serializer = CreateSerializer(options, converters);
+            return token.ToObject<T>(serializer);
+        }
+
+        private static JsonSerializer CreateSerializer(SerializationOptions options, params JsonConverter[] converters)
         {
             var settings = new JsonSerializerSettings();
+            settings.Converters = converters;
             if ((options & SerializationOptions.CamelCaseProperties) != 0)
             {
                 settings.ContractResolver = CamelCaseResolver;
             }
-            var serializer = JsonSerializer.CreateDefault(settings);
-            return token.ToObject<T>(serializer);
+            return JsonSerializer.CreateDefault(settings);
         }
     }
 }

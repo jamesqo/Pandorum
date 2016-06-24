@@ -40,7 +40,7 @@ namespace Pandorum.Stations
             var options = CreateStationListOptions();
             return this.AwaitAndSelectResult(
                 _inner._baseClient.GetStationList(options),
-                (result, _) => CreateList(result));
+                (result, _) => CreateStations(result));
         }
 
         // out/ref have issues with async as well as lambdas,
@@ -68,10 +68,11 @@ namespace Pandorum.Stations
             return new GetStationListOptions();
         }
 
-        private static IEnumerable<Station> CreateList(JToken result)
+        private static IEnumerable<Station> CreateStations(JToken result)
         {
             var options = SerializationOptions.CamelCaseProperties;
-            return result["stations"].ToEnumerable<Station>(options);
+            var converter = new PandoraTimeConverter(); // TODO: Is this too coupling? Should be aware we need to add such a converter here?
+            return result["stations"].ToEnumerable<Station>(options, converter);
         }
 
         private static SearchResults CreateSearchResults(JToken result)
