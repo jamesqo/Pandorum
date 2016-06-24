@@ -32,7 +32,7 @@ namespace Pandorum.Stations
         {
             return this.AwaitAndSelectResult(
                 _inner._baseClient.GetGenreStations(),
-                (result, _) => CreateList(result));
+                (result, _) => CreateCategories(result));
         }
 
         private static GetGenreStationsChecksumOptions CreateChecksumOptions()
@@ -40,7 +40,7 @@ namespace Pandorum.Stations
             return new GetGenreStationsChecksumOptions();
         }
 
-        private static IEnumerable<Category> CreateList(JToken result)
+        private static IEnumerable<Category> CreateCategories(JToken result)
         {
             return result["categories"].CamelCasedToObject<IEnumerable<Category>>();
         }
