@@ -52,7 +52,7 @@ namespace Pandorum.Stations
         {
             return this.AwaitAndSelectResult(
                 _inner._baseClient.Search(CreateSearchOptions(searchText)),
-                (result, _) => result.CamelCasedToObject<SearchResults>());
+                (result, _) => CreateSearchResults(result));
         }
 
         private static SearchOptions CreateSearchOptions(string searchText)
@@ -70,7 +70,14 @@ namespace Pandorum.Stations
 
         private static IEnumerable<Station> CreateList(JToken result)
         {
-            return result["stations"].CamelCasedToObject<IEnumerable<Station>>();
+            var options = SerializationOptions.CamelCaseProperties;
+            return result["stations"].ToEnumerable<Station>(options);
+        }
+
+        private static SearchResults CreateSearchResults(JToken result)
+        {
+            var options = SerializationOptions.CamelCaseProperties;
+            return result.ToObject<SearchResults>(options);
         }
     }
 }

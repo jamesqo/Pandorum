@@ -42,7 +42,8 @@ namespace Pandorum.Stations
 
         private static IEnumerable<Category> CreateCategories(JToken result)
         {
-            return result["categories"].CamelCasedToObject<IEnumerable<Category>>();
+            var options = SerializationOptions.CamelCaseProperties;
+            return result["categories"].ToEnumerable<Category>(options);
         }
     }
 }
