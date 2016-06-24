@@ -9,7 +9,7 @@
       "type": "platform",
       "version": "1.0.0-rc2-3002702"
     },
-    "Pandorum": {
+    "Pandorum.Samples.Helpers": {
       "target": "project"
     }
   },
