@@ -17,8 +17,10 @@ namespace Pandorum.Samples.UserLogin
             using (var client = new PandoraClient())
             {
                 await client.PartnerLogin();
-                // TODO: Switch to using environment variables
-                await client.UserLogin("YOUR_EMAIL", "YOUR_PASSWORD"); // Please don't commit this!
+
+                string username = Environment.GetEnvironmentVariable("PANDORUM_USERNAME");
+                string password = Environment.GetEnvironmentVariable("PANDORUM_PASSWORD");
+                await client.UserLogin(username, password);
             }
         }
     }
