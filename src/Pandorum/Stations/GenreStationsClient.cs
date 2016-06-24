@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class PandoraGenreStationsClient
+    public class GenreStationsClient
     {
         private readonly PandoraClient _inner;
 
-        internal PandoraGenreStationsClient(PandoraClient inner)
+        internal GenreStationsClient(PandoraClient inner)
         {
             Debug.Assert(inner != null);
 
@@ -22,7 +22,7 @@ namespace Pandorum.Stations
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PandoraCategory>> List()
+        public Task<IEnumerable<Category>> List()
         {
             throw new NotImplementedException();
         }
