@@ -37,13 +37,16 @@ namespace Pandorum.Stations
 
         public Task<IEnumerable<Station>> List()
         {
-            throw new NotImplementedException();
+            var options = CreateStationListOptions();
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetStationList(options),
+                (result, _) => CreateList(result));
         }
 
-        public Task<IEnumerable<Station>> List(out string checksum)
-        {
-            throw new NotImplementedException();
-        }
+        // out/ref have issues with async as well as lambdas,
+        // so commenting this out for now
+        // TODO: Find a way to expose this
+        // public Task<IEnumerable<Station>> List(out string checksum)
 
         public Task<SearchResults> Search(string searchText)
         {
@@ -58,6 +61,16 @@ namespace Pandorum.Stations
             options.SearchText = searchText;
             // TODO: Other parameters
             return options;
+        }
+
+        private static GetStationListOptions CreateStationListOptions()
+        {
+            return new GetStationListOptions();
+        }
+
+        private static IEnumerable<Station> CreateList(JToken result)
+        {
+            return result["stations"].CamelCasedToObject<IEnumerable<Station>>();
         }
     }
 }
