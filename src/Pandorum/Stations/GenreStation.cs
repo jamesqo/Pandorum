@@ -30,5 +30,7 @@ namespace Pandorum.Stations
 
         public int? Score { get; }
         public string Name { get; }
+
+        public override string ToString() => Name;
     }
 }

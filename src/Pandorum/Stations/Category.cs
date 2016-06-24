@@ -21,5 +21,7 @@ namespace Pandorum.Stations
 
         public string Name { get; }
         public IEnumerable<GenreStation> Stations { get; }
+
+        public override string ToString() => Name;
     }
 }

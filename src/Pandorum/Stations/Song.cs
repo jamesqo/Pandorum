@@ -22,6 +22,8 @@ namespace Pandorum.Stations
 
         public int Score { get; }
         public string Name { get; }
-        public string ArtistName { get; } // TODO: Artist or ArtistName?
+        public string ArtistName { get; }
+
+        public override string ToString() => Name;
     }
 }
