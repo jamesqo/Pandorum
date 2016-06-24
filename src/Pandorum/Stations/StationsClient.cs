@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Pandorum.Core;
+using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class StationsClient : IAsyncClient
+    public class StationsClient : IJsonProcessor
     {
         private readonly PandoraClient _inner;
 
@@ -48,7 +49,7 @@ namespace Pandorum.Stations
         {
             return this.AwaitAndSelectResult(
                 _inner._baseClient.Search(CreateSearchOptions(searchText)),
-                (result, _) => CreateSearchResults(result));
+                (result, _) => result.CamelCaseToObject<SearchResults>());
         }
 
         private static SearchOptions CreateSearchOptions(string searchText)
@@ -58,16 +59,6 @@ namespace Pandorum.Stations
                 SearchText = searchText
                 // TODO: Other parameters
             };
-        }
-
-        private static SearchResults CreateSearchResults(JToken result)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            var serializer = JsonSerializer.CreateDefault(settings);
-            return result.ToObject<SearchResults>(serializer);
         }
     }
 }

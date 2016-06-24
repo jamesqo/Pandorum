@@ -12,10 +12,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Pandorum.Stations;
+using Pandorum.Core.Json;
 
 namespace Pandorum
 {
-    public class PandoraClient : IAsyncClient, IDisposable
+    public class PandoraClient : IJsonProcessor, IDisposable
     {
         internal IPandoraJsonClient _baseClient;
 
