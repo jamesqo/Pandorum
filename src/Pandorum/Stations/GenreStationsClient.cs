@@ -1,4 +1,5 @@
-﻿using Pandorum.Core.Json;
+﻿using Newtonsoft.Json.Linq;
+using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,19 @@ namespace Pandorum.Stations
 
         public Task<IEnumerable<Category>> List()
         {
-            throw new NotImplementedException();
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetGenreStations(),
+                (result, _) => CreateList(result));
         }
 
         private static GetGenreStationsChecksumOptions CreateChecksumOptions()
         {
             return new GetGenreStationsChecksumOptions();
+        }
+
+        private static IEnumerable<Category> CreateList(JToken result)
+        {
+            return result["categories"].CamelCaseToObject<IEnumerable<Category>>();
         }
     }
 }
