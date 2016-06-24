@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pandorum.Samples.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +19,8 @@ namespace Pandorum.Samples.UserLogin
             {
                 await client.PartnerLogin();
 
-                string username = Environment.GetEnvironmentVariable("PANDORUM_USERNAME");
-                string password = Environment.GetEnvironmentVariable("PANDORUM_PASSWORD");
+                string username = PandoraHelpers.Username;
+                string password = PandoraHelpers.Password;
                 await client.UserLogin(username, password);
             }
         }
