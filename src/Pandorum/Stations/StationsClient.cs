@@ -49,7 +49,7 @@ namespace Pandorum.Stations
         {
             return this.AwaitAndSelectResult(
                 _inner._baseClient.Search(CreateSearchOptions(searchText)),
-                (result, _) => result.CamelCaseToObject<SearchResults>());
+                (result, _) => result.CamelCasedToObject<SearchResults>());
         }
 
         private static SearchOptions CreateSearchOptions(string searchText)

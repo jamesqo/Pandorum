@@ -15,7 +15,7 @@ namespace Pandorum.Core.Json
         private static IContractResolver CamelCaseResolver =>
             s_camelCaseResolver ?? (s_camelCaseResolver = new CamelCasePropertyNamesContractResolver());
 
-        public static T CamelCaseToObject<T>(this JToken token)
+        public static T CamelCasedToObject<T>(this JToken token)
         {
             var settings = new JsonSerializerSettings();
             settings.ContractResolver = CamelCaseResolver;
