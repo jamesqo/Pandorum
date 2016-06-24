@@ -120,9 +120,7 @@ namespace Pandorum.Core.Net
             {
                 body = EncryptToHex(body);
             }
-
-            // TODO: Is using PooledStringContent worth the
-            // extra Task allocations/complexity here? (I think so)
+            
             using (var content = new PooledStringContent(body))
             {
                 return await _httpClient.PostAndReadJsonAsync(uri, content).ConfigureAwait(false);

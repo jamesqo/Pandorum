@@ -4,6 +4,7 @@
   "buildOptions": {
     "compile": {
       "includeFiles": [
+        "../Common/Core/ImmutableCache.cs",
         "../Common/Core/Time/DateTimeHelpers.cs"
       ]
     }
