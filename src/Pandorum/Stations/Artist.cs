@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Artist : Seed
+    public class Artist : ISeed
     {
-        internal Artist(ArtistDto dto) : base(dto?.MusicToken)
+        private readonly string _musicToken;
+
+        internal Artist(ArtistDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -18,11 +20,14 @@ namespace Pandorum.Stations
             Score = dto.Score;
             Name = dto.ArtistName;
             IsLikelyMatch = dto.LikelyMatch;
+            _musicToken = dto.MusicToken;
         }
 
         public string Name { get; }
         internal int Score { get; }
         internal bool IsLikelyMatch { get; }
+
+        string ISeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }
