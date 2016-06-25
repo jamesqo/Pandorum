@@ -19,6 +19,8 @@ namespace Pandorum.Stations
 
             Explanation = dto.Explanation;
             Songs = dto.Songs.Select(s => new Song(s));
+            Artists = dto.Artists.Select(a => new Artist(a));
+            GenreStations = dto.GenreStations.Select(g => new GenreStation(g));
         }
 
         public string Explanation { get; }
