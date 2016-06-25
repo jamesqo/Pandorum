@@ -30,6 +30,6 @@ namespace Pandorum.Core.DataTransfer.Stations
         public bool AllowRename { get; set; }
         public string StationSharingUrl { get; set; }
         public FeedbackDto Feedback { get; set; }
-        // QuickMixStationIds?
+        // TODO: QuickMixStationIds?
     }
 }
