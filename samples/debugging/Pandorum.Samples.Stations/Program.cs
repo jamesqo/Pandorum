@@ -1,5 +1,6 @@
 ﻿using Pandorum.Net;
 using Pandorum.Samples.Helpers;
+using Pandorum.Stations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,15 @@ namespace Pandorum.Samples.Stations
                     client.Settings.Endpoint = PandoraEndpoints.Tuner.HttpUri; // Some things only seem to work with HTTP
 
                     Console.WriteLine("The checksum of your station list is:");
-                    Console.WriteLine(await client.Stations.Checksum());
+                    var original = await client.Stations.Checksum();
+                    Console.WriteLine(original);
+
+                    Console.WriteLine("Here it is again, calling user.getStationList:");
+                    var reference = new ChecksumReference();
+                    await client.Stations.List(reference);
+                    Console.WriteLine(reference);
+
+                    Console.WriteLine($"Have any of your stations been modified between API calls? {original != reference.Checksum}");
 
                     Console.WriteLine("List of stations:");
                     var list = await client.Stations.List();

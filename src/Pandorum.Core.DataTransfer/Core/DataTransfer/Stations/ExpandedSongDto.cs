@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    public class ExtendedSongDto
+    public class ExpandedSongDto
     {
         public string SeedId { get; set; }
         public string ArtistName { get; set; }

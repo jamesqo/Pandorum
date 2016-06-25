@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    public class ExtendedArtistDto
+    public class ExpandedArtistDto
     {
         // TODO
     }
