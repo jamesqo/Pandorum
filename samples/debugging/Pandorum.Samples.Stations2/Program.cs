@@ -28,7 +28,12 @@ namespace Pandorum.Samples.Stations2
                 Console.WriteLine("Creating a new station...");
                 Console.WriteLine($"Using seed: {seed.GetType()}, {seed}");
 
-                await client.Stations.Create(seed);
+                var created = await client.Stations.Create(seed);
+                Console.WriteLine($"Successfully created {created}!");
+
+                Console.WriteLine("Deleting the newly created station...");
+                await client.Stations.Delete(created);
+                Console.WriteLine("Successfully deleted!");
             });
         }
     }

@@ -37,14 +37,15 @@ namespace Pandorum.Stations
                 (result, _) => (string)result["checksum"]);
         }
 
-        // TODO: This should probably return an IStationInfo
-        public async Task Create(ISeed seed)
+        public Task<Station> Create(ISeed seed)
         {
             if (seed == null)
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateCreateOptions(seed);
-            await _inner._baseClient.CreateStation(options).ConfigureAwait(false);
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.CreateStation(options),
+                (result, _) => CreateStation(result));
         }
 
         public async Task Delete(IStation station)
@@ -164,6 +165,14 @@ namespace Pandorum.Stations
             var settings = new JsonSerializerSettings().WithCamelCase();
             var dto = result.ToObject<SearchResultsDto>(settings.ToSerializer());
             return new SearchResults(dto);
+        }
+
+        private static Station CreateStation(JToken result)
+        {
+            var settings = new JsonSerializerSettings().WithCamelCase();
+            var serializer = settings.ToSerializer();
+            var dto = result.ToObject<StationDto>(serializer);
+            return new Station(dto);
         }
     }
 }
