@@ -21,7 +21,8 @@ namespace Pandorum.Stations
 
         internal StationsClient(PandoraClient inner)
         {
-            Debug.Assert(inner != null);
+            if (inner == null)
+                throw new ArgumentNullException(nameof(inner));
 
             _inner = inner;
         }
