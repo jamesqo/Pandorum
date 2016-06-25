@@ -31,9 +31,19 @@ namespace Pandorum.Samples.Stations2
                 var created = await client.Stations.Create(seed);
                 Console.WriteLine($"Successfully created {created}!");
 
-                Console.WriteLine("Deleting the newly created station...");
-                await client.Stations.Delete(created);
-                Console.WriteLine("Successfully deleted!");
+                try
+                {
+                    var newName = "_-_-_- Radio";
+                    Console.WriteLine($"Renaming to {newName}");
+                    created = await client.Stations.Rename(created, newName);
+                    Console.WriteLine("Done.");
+                }
+                finally
+                {
+                    Console.WriteLine("Deleting the newly created station...");
+                    await client.Stations.Delete(created);
+                    Console.WriteLine("Successfully deleted!");
+                }
             });
         }
     }

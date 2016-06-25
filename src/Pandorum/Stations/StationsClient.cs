@@ -83,13 +83,15 @@ namespace Pandorum.Stations
                 (result, _) => CreateStationsAndSetChecksum(result, reference));
         }
 
-        public async Task Rename(IStation station, string newName)
+        public Task<Station> Rename(IStation station, string newName)
         {
             if (station == null || newName == null)
                 throw new ArgumentNullException(station == null ? nameof(station) : nameof(newName));
 
             var options = CreateRenameOptions(station, newName);
-            await _inner._baseClient.RenameStation(options).ConfigureAwait(false);
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.RenameStation(options),
+                (result, _) => CreateStation(result));
         }
 
         public Task<SearchResults> Search(string searchText)
