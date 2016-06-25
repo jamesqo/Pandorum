@@ -8,6 +8,6 @@ namespace Pandorum.Core.DataTransfer.Stations
     public class CategoryDto
     {
         public string CategoryName { get; set; }
-        public GenreStationDto[] Stations { get; set; }
+        public GenreStationDto2[] Stations { get; set; }
     }
 }
