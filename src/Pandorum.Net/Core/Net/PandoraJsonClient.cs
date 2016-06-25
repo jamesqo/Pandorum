@@ -70,11 +70,6 @@ namespace Pandorum.Core.Net
 
         // Helpers
 
-        private PandoraUriBuilder CreateUriBuilder()
-        {
-            return new PandoraUriBuilder(Settings.Endpoint);
-        }
-
         private string EncryptToHex(string input)
         {
             return BlowfishEcb.EncryptStringToHex(input, Settings.PartnerInfo.EncryptPassword);
@@ -87,31 +82,31 @@ namespace Pandorum.Core.Net
 
         private string SerializeToJson(object obj, bool includeSyncTime = true, bool includeAuthToken = true)
         {
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Converters = { new OptionalBoolConverter() },
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
-            var serializer = JsonSerializer.CreateDefault(settings);
-            var jobject = JObject.FromObject(obj, serializer);
+            var settings = new JsonSerializerSettings()
+                .WithCamelCase()
+                .AddConverter(new OptionalBoolConverter())
+                .WithDefaultValueHandling(DefaultValueHandling.Ignore);
+
+            var jobj = JObject.FromObject(obj, settings.ToSerializer());
 
             if (includeSyncTime)
-                jobject["syncTime"] = CalculateSyncTime();
+                jobj["syncTime"] = CalculateSyncTime();
             if (includeAuthToken)
-                jobject["userAuthToken"] = Settings.AuthToken;
+                jobj["userAuthToken"] = Settings.AuthToken;
 
-            return jobject.ToString();
+            return jobj.ToString();
         }
 
         private string CreateUriFromMethod(string method)
         {
-            return CreateUriBuilder()
-                .WithMethod(method)
+            var builder = new PandoraUriBuilder(Settings.Endpoint);
+
+            builder = builder.WithMethod(method)
                 .WithAuthToken(Settings.AuthToken)
                 .WithPartnerId(Settings.PartnerId)
-                .WithUserId(Settings.UserId)
-                .ToString();
+                .WithUserId(Settings.UserId);
+
+            return builder.ToString();
         }
 
         private async Task<JObject> PostAndReadJson(string uri, string body, bool encrypt = true)

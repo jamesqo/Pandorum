@@ -5,6 +5,7 @@
     "compile": {
       "includeFiles": [
         "../Common/Core/ImmutableCache.cs",
+        "../Common/Core/Json/JsonSerializerSettingsExtensions.cs",
         "../Common/Core/Time/DateTimeHelpers.cs"
       ]
     }
