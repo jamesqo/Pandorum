@@ -12,6 +12,8 @@ namespace Pandorum.Stations
 {
     public class Station
     {
+        private readonly QuickMixStationInfo _quickMix;
+
         internal Station(StationDto dto)
         {
             if (dto == null)
@@ -31,6 +33,7 @@ namespace Pandorum.Stations
             Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
             IsQuickMix = dto.IsQuickMix;
             RequiresCleanAds = dto.RequiresCleanAds;
+            _quickMix = new QuickMixStationInfo(dto.QuickMixStationIds); // this is a struct, so we eagerly allocate
         }
 
         public string Name { get; }
@@ -46,6 +49,19 @@ namespace Pandorum.Stations
         public IEnumerable<string> Genres { get; }
         public bool IsQuickMix { get; }
         public bool RequiresCleanAds { get; }
+
+        public QuickMixStationInfo QuickMix
+        {
+            get
+            {
+                if (!IsQuickMix)
+                    throw new InvalidOperationException($"You cannot call {nameof(QuickMix)} on a station that isn't a QuickMix station.");
+
+                Debug.Assert(_quickMix.StationIds != null);
+                return _quickMix;
+            }
+        }
+
         internal string Token { get; }
 
         public override string ToString() => Name;
