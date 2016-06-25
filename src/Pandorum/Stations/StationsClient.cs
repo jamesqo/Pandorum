@@ -83,6 +83,9 @@ namespace Pandorum.Stations
 
         public Task<SearchResults> Search(string searchText)
         {
+            if (searchText == null)
+                throw new ArgumentNullException(nameof(searchText));
+
             return this.AwaitAndSelectResult(
                 _inner._baseClient.Search(CreateSearchOptions(searchText)),
                 (result, _) => CreateSearchResults(result));
