@@ -122,15 +122,11 @@ namespace Pandorum
             // current Unix time, and set the SyncTimestamp
             var syncTime = (string)result["syncTime"];
             var parsedTimestamp = DateTimeOffset.UtcNow.ToUnixTime() - DecryptSyncTime(syncTime);
-            var settings = _baseClient.Settings; // cache interface method call
-            // TODO: Maybe this 'violates the contract' of the interface, e.g.
-            // you could have a IJsonClientSettings that when set_SyncTimestamp
-            // was called changed the value of _baseClient.Settings
-            settings.SyncTimestamp = parsedTimestamp;
+            _baseClient.Settings.SyncTimestamp = parsedTimestamp;
 
             // Set partner_id, auth_token
-            settings.AuthToken = (string)result["partnerAuthToken"];
-            settings.PartnerId = (string)result["partnerId"];
+            _baseClient.Settings.AuthToken = (string)result["partnerAuthToken"];
+            _baseClient.Settings.PartnerId = (string)result["partnerId"];
         }
 
         // User login
