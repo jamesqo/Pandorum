@@ -63,6 +63,15 @@ namespace Pandorum.Stations
                 (result, _) => CreateStationsAndSetChecksum(result, reference));
         }
 
+        public async Task Rename(IStation station, string newName)
+        {
+            if (station == null || newName == null)
+                throw new ArgumentNullException(station == null ? nameof(station) : nameof(newName));
+
+            var options = CreateRenameOptions(station, newName);
+            await _inner._baseClient.RenameStation(options);
+        }
+
         public Task<SearchResults> Search(string searchText)
         {
             return this.AwaitAndSelectResult(
@@ -83,6 +92,15 @@ namespace Pandorum.Stations
         private static GetStationListOptions CreateStationListOptions()
         {
             return new GetStationListOptions();
+        }
+
+        private static RenameStationOptions CreateRenameOptions(IStation station, string newName)
+        {
+            return new RenameStationOptions
+            {
+                StationToken = station.Token,
+                StationName = newName
+            };
         }
 
         private static IEnumerable<Station> CreateStations(JToken result)

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Station : IStationInfo, IStation
+    public class Station : IStation, IStationInfo
     {
         private readonly string _token;
         private readonly QuickMixStationInfo _quickMix;

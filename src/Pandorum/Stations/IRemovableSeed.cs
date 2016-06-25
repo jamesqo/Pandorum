@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public interface ISeedRemover
+    public interface IRemovableSeed
     {
         string SeedId { get; }
     }

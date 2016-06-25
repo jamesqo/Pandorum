@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Artist : IArtist, ISeed
+    public class Artist : ISeed, IArtistInfo
     {
         private readonly string _musicToken;
 

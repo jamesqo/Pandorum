@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedArtist : IArtistInfo, IExpandedSeed
+    public class ExpandedArtist : IRemovableSeed, IArtistInfo
     {
+        private readonly string _seedId;
+
         internal ExpandedArtist(ExpandedArtistDto dto)
         {
             if (dto == null)
@@ -18,6 +20,6 @@ namespace Pandorum.Stations
 
         public string Name { get; }
 
-        public ISeedRemover Remover { get; }
+        string IRemovableSeed.SeedId => _seedId;
     }
 }

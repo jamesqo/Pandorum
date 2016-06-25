@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedSong : ISong, IExpandedSeed
+    public class ExpandedSong : IRemovableSeed, ISongInfo
     {
+        private readonly string _seedId;
+
         internal ExpandedSong(ExpandedSongDto dto)
         {
             if (dto == null)
@@ -18,7 +20,8 @@ namespace Pandorum.Stations
             ArtistName = dto.ArtistName;
             ArtUrl = dto.ArtUrl;
             DateCreated = dto.DateCreated.ToDateTimeOffset();
-            Remover = new SeedRemover(dto.SeedId);
+
+            _seedId = dto.SeedId;
         }
 
         public string Name { get; }
@@ -26,6 +29,7 @@ namespace Pandorum.Stations
 
         public string ArtUrl { get; }
         public DateTimeOffset DateCreated { get; }
-        public ISeedRemover Remover { get; }
+
+        string IRemovableSeed.SeedId => _seedId;
     }
 }

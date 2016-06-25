@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    internal interface IStation
+    internal interface IStationInfo
     {
         string Name { get; }
         DateTimeOffset DateCreated { get; }

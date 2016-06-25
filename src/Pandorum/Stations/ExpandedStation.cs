@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedStation : IStationInfo, IStation
+    public class ExpandedStation : IStation, IStationInfo
     {
         private readonly string _token;
 
