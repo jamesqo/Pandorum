@@ -10,7 +10,7 @@ using Pandorum.Core.DataTransfer.Stations;
 
 namespace Pandorum.Stations
 {
-    public class SearchResults : IEnumerable<SearchResult>
+    public class SearchResults
     {
         internal SearchResults(SearchResultsDto dto)
         {
@@ -28,15 +28,5 @@ namespace Pandorum.Stations
         public IEnumerable<Song> Songs { get; }
         public IEnumerable<Artist> Artists { get; }
         public IEnumerable<GenreStation> GenreStations { get; }
-
-        public IEnumerator<SearchResult> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
