@@ -168,6 +168,7 @@ namespace Pandorum
             var decryptedString = BlowfishEcb.DecryptHexToString(input, Settings.PartnerInfo.DecryptPassword);
             decryptedString = decryptedString.Substring(4); // skip first four bytes of garbage
             return long.Parse(decryptedString.Replace("\u0002", string.Empty)); // TODO: Can other control chars appear at the end?
+            // Maybe it should just be decryptedString.Substring(4, 10) instead
         }
         
         // Dispose logic
