@@ -30,6 +30,7 @@ namespace Pandorum.Stations
             HasEditableDescription = dto.AllowEditDescription;
             Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
             IsQuickMix = dto.IsQuickMix;
+            RequiresCleanAds = dto.RequiresCleanAds;
         }
 
         public string Name { get; }
@@ -44,6 +45,7 @@ namespace Pandorum.Stations
         public bool HasEditableDescription { get; }
         public IEnumerable<string> Genres { get; }
         public bool IsQuickMix { get; }
+        public bool RequiresCleanAds { get; }
         internal string Token { get; }
 
         public override string ToString() => Name;

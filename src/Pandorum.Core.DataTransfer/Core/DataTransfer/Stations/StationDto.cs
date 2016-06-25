@@ -20,5 +20,6 @@ namespace Pandorum.Core.DataTransfer.Stations
         public bool AllowEditDescription { get; set; }
         public string[] Genre { get; set; }
         public bool IsQuickMix { get; set; }
+        public bool RequiresCleanAds { get; set; }
     }
 }
