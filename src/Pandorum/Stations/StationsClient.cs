@@ -78,7 +78,9 @@ namespace Pandorum.Stations
                 .WithCamelCase()
                 .AddConverter(new PandoraTimeConverter());
 
-            return result["stations"].ToEnumerable<Station>(settings.ToSerializer());
+            var serializer = settings.ToSerializer();
+            var dtos = result["stations"].ToEnumerable<StationDto>(serializer);
+            return dtos.Select(s => new Station(s));
         }
 
         private static SearchResults CreateSearchResults(JToken result)

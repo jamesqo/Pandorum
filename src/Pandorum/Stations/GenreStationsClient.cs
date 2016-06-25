@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pandorum.Core.DataTransfer.Stations;
 using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
 using System;
@@ -45,7 +46,9 @@ namespace Pandorum.Stations
         private static IEnumerable<Category> CreateCategories(JToken result)
         {
             var settings = new JsonSerializerSettings().WithCamelCase();
-            return result["categories"].ToEnumerable<Category>(settings.ToSerializer());
+            var serializer = settings.ToSerializer();
+            var dtos = result["categories"].ToEnumerable<CategoryDto>(serializer);
+            return dtos.Select(c => new Category(c));
         }
     }
 }
