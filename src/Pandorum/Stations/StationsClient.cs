@@ -37,6 +37,16 @@ namespace Pandorum.Stations
                 (result, _) => (string)result["checksum"]);
         }
 
+        // TODO: This should probably return an IStationInfo
+        public async Task Create(ISeed seed)
+        {
+            if (seed == null)
+                throw new ArgumentNullException(nameof(seed));
+
+            var options = CreateCreateOptions(seed);
+            await _inner._baseClient.CreateStation(options).ConfigureAwait(false);
+        }
+
         public async Task Delete(IStation station)
         {
             if (station == null)
@@ -118,6 +128,20 @@ namespace Pandorum.Stations
         private static DeleteStationOptions CreateDeleteOptions(IStation station)
         {
             return new DeleteStationOptions { StationToken = station.Token };
+        }
+
+        private static CreateStationOptions CreateCreateOptions(ISeed seed)
+        {
+            string musicType;
+
+            if (seed is Artist)
+                musicType = "artist";
+            else if (seed is Song || seed is GenreStation)
+                musicType = "song"; // TODO: Is this correct for genreStations?
+            else
+                throw new ArgumentException("The supplied seed must be an artist, song, or genre station.", nameof(seed));
+
+            return new CreateStationOptions { MusicType = musicType, MusicToken = seed.MusicToken };
         }
 
         private static IEnumerable<Station> CreateStations(JToken result)
