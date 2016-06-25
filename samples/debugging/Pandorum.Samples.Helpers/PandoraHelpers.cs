@@ -22,7 +22,7 @@ namespace Pandorum.Samples.Helpers
 
             try
             {
-                await client.Login(Username, Password);
+                await client.Login(Username, Password).ConfigureAwait(false);
                 return client;
             }
             catch
@@ -30,6 +30,18 @@ namespace Pandorum.Samples.Helpers
                 client.Dispose();
                 throw;
             }
+        }
+
+        // Logs in and blocks synchronously until func is completed
+        public static void Login(Func<PandoraClient, Task> func)
+        {
+            AsyncHelpers.RunSynchronously(async () =>
+            {
+                using (var client = await Login().ConfigureAwait(false))
+                {
+                    await func(client).ConfigureAwait(false);
+                }
+            });
         }
     }
 }
