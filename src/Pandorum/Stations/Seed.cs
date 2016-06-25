@@ -10,7 +10,8 @@ namespace Pandorum.Stations
     {
         internal Seed(string musicToken)
         {
-            Debug.Assert(musicToken != null);
+            if (musicToken == null)
+                throw new ArgumentNullException(nameof(musicToken));
 
             MusicToken = musicToken;
         }

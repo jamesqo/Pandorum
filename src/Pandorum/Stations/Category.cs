@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Pandorum.Core;
+using Pandorum.Core.DataTransfer.Stations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,13 +11,13 @@ namespace Pandorum.Stations
 {
     public class Category
     {
-        [JsonConstructor]
-        private Category(GenreStation[] stations, string categoryName)
+        internal Category(CategoryDto dto)
         {
-            Debug.Assert(stations != null && categoryName != null);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            Name = categoryName;
-            Stations = stations.AsReadOnly();
+            Name = dto.CategoryName;
+            Stations = dto.Stations.Select(s => new GenreStation(s));
         }
 
         public string Name { get; }

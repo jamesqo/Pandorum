@@ -6,20 +6,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections;
+using Pandorum.Core.DataTransfer.Stations;
 
 namespace Pandorum.Stations
 {
     public class SearchResults : IEnumerable<SearchResult>
     {
-        [JsonConstructor] // used by Json.NET
-        private SearchResults(Song[] songs, Artist[] artists, GenreStation[] genreStations)
+        internal SearchResults(SearchResultsDto dto)
         {
-            Debug.Assert(songs != null && artists != null && genreStations != null);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            Songs = songs.AsReadOnly();
-            Artists = artists.AsReadOnly();
-            GenreStations = genreStations.AsReadOnly();
+            Explanation = dto.Explanation;
+            Songs = dto.Songs.Select(s => new Song(s));
         }
+
+        public string Explanation { get; }
 
         public IEnumerable<Song> Songs { get; }
         public IEnumerable<Artist> Artists { get; }

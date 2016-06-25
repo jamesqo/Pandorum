@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Pandorum.Core.DataTransfer.Stations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,27 +10,17 @@ namespace Pandorum.Stations
 {
     public class GenreStation : Seed
     {
-        [JsonConstructor]
-        private GenreStation(string musicToken, int score, string stationName)
-            : base(musicToken)
+        internal GenreStation(GenreStationDto dto) : base(dto?.MusicToken)
         {
-            Debug.Assert(stationName != null);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            Score = score;
-            Name = stationName;
+            Score = dto.Score;
+            Name = dto.StationName;
         }
 
-        [JsonConstructor]
-        private GenreStation(string stationToken, string stationName)
-            : base(stationToken) // in this case stationToken is actually a musicToken
-        {
-            Debug.Assert(stationName != null);
-
-            Name = stationName;
-        }
-
-        public int? Score { get; }
         public string Name { get; }
+        internal int Score { get; }
 
         public override string ToString() => Name;
     }

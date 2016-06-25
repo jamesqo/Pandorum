@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Pandorum.Core;
+using Pandorum.Core.DataTransfer.Stations;
 using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
 using System;
@@ -82,7 +83,8 @@ namespace Pandorum.Stations
         private static SearchResults CreateSearchResults(JToken result)
         {
             var settings = new JsonSerializerSettings().WithCamelCase();
-            return result.ToObject<SearchResults>(settings.ToSerializer());
+            var dto = result.ToObject<SearchResultsDto>(settings.ToSerializer());
+            return new SearchResults(dto);
         }
     }
 }
