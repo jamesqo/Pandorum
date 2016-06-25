@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    internal class SearchResultsDto
+    public class SearchResultsDto
     {
         public bool NearMatchesAvailable { get; set; }
         public string Explanation { get; set; }

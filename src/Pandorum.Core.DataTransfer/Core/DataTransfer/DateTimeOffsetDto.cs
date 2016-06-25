@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer
 {
-    internal class DateTimeOffsetDto
+    public class DateTimeOffsetDto
     {
         public long Time { get; set; } // time in milliseconds since Unix epoch
     }

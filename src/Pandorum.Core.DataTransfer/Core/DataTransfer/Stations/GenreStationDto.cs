@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    internal class GenreStationDto
+    public class GenreStationDto
     {
         public string MusicToken { get; set; }
         public int Score { get; set; }

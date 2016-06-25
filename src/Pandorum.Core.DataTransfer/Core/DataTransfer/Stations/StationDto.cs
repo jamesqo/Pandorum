@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    internal class StationDto
+    public class StationDto
     {
         public string StationToken { get; set; }
         public string StationName { get; set; }
