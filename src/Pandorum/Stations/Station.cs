@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Pandorum.Core.DataTransfer;
 using Pandorum.Core.DataTransfer.Stations;
 using System;
 using System.Collections.Generic;
@@ -10,21 +11,18 @@ namespace Pandorum.Stations
 {
     public class Station
     {
-        internal Station(StationDto)
-        [JsonConstructor]
-        private Station(string stationToken, string stationName, DateTimeOffset dateCreated)
+        internal Station(StationDto dto)
         {
-            Debug.Assert(stationToken != null);
-            Debug.Assert(stationName != null);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            Name = stationName;
-            Token = stationToken;
-            DateCreated = dateCreated;
+            Name = dto.StationName;
+            Token = dto.StationToken;
+            DateCreated = dto.DateCreated.ToDateTimeOffset();
         }
 
         public string Name { get; }
         public DateTimeOffset DateCreated { get; }
-
         internal string Token { get; }
 
         public override string ToString() => Name;
