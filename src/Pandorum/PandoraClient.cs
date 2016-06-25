@@ -23,16 +23,9 @@ namespace Pandorum
         private StationsClient _stations;
 
         public PandoraClient()
-            : this(PandoraEndpoints.Tuner.HttpsUri,
-                  PandoraEndpoints.Tuner.iOS)
+            : this(PandoraEndpoints.Tuner.HttpsUri, PandoraEndpoints.Tuner.iOS)
         {
         }
-
-        // TODO: Maybe just a PandoraClient(string) ctor should
-        // be added here, but then how would we infer the partnerInfo?
-
-        // Also changes to the endpoint might need to effect changes
-        // to the PartnerInfo in Settings
 
         public PandoraClient(string endpoint, IPartnerInfo partnerInfo)
             : this(endpoint, partnerInfo, new VerifyingJsonClient())
@@ -41,16 +34,12 @@ namespace Pandorum
 
         public PandoraClient(string endpoint, IPartnerInfo partnerInfo, IPandoraJsonClient baseClient)
         {
-            if (endpoint == null || partnerInfo == null || baseClient == null)
-            {
-                string paramName = (endpoint == null) ?
-                    nameof(endpoint) :
-                    (partnerInfo == null) ?
-                    nameof(partnerInfo) :
-                    nameof(baseClient);
-
-                throw new ArgumentNullException(paramName);
-            }
+            if (endpoint == null)
+                throw new ArgumentNullException(nameof(endpoint));
+            if (partnerInfo == null)
+                throw new ArgumentNullException(nameof(partnerInfo));
+            if (baseClient == null)
+                throw new ArgumentNullException(nameof(baseClient));
 
             _baseClient = baseClient;
             Settings = new PandoraClientSettings(baseClient.Settings)
@@ -87,15 +76,6 @@ namespace Pandorum
         }
 
         // Partner login
-
-        // TODO: Could we somehow expose the syncTime/auth
-        // details to the user without actually logging in?
-        // Async methods can't have ref/out params, so we
-        // can't do something like
-        //
-        // public async Task PartnerLogin(out PartnerLoginInfo info)
-        //
-        // unforunately.
 
         public Task PartnerLogin()
         {
