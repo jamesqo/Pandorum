@@ -50,21 +50,21 @@ namespace Pandorum.Core.Net
 
         public Task<JObject> CheckLicensing()
         {
-            var uri = CreateUri("test.checkLicensing");
+            var uri = CreateUriFromMethod("test.checkLicensing");
             return _httpClient.GetJsonAsync(uri);
         }
 
         public Task<JObject> PartnerLogin(PartnerLoginOptions options)
         {
-            var uri = CreateUri("auth.partnerLogin");
-            var body = SerializeObject(options, includeSyncTime: false, includeAuthToken: false);
+            var uri = CreateUriFromMethod("auth.partnerLogin");
+            var body = SerializeToJson(options, includeSyncTime: false, includeAuthToken: false);
             return PostAndReadJson(uri, body, encrypt: false); // POST body for partner login isn't encrypted
         }
 
         public Task<JObject> UserLogin(UserLoginOptions options)
         {
-            var uri = CreateUri("auth.userLogin");
-            var body = SerializeObject(options, includeSyncTime: true, includeAuthToken: false);
+            var uri = CreateUriFromMethod("auth.userLogin");
+            var body = SerializeToJson(options, includeSyncTime: true, includeAuthToken: false);
             return PostAndReadJson(uri, body);
         }
 
@@ -85,7 +85,7 @@ namespace Pandorum.Core.Net
             return DateTimeOffset.UtcNow.ToUnixTime() + Settings.SyncTimestamp;
         }
 
-        private string SerializeObject(object obj, bool includeSyncTime = true, bool includeAuthToken = true)
+        private string SerializeToJson(object obj, bool includeSyncTime = true, bool includeAuthToken = true)
         {
             var settings = new JsonSerializerSettings
             {
@@ -104,7 +104,7 @@ namespace Pandorum.Core.Net
             return jobject.ToString();
         }
 
-        private string CreateUri(string method)
+        private string CreateUriFromMethod(string method)
         {
             return CreateUriBuilder()
                 .WithMethod(method)
@@ -133,8 +133,8 @@ namespace Pandorum.Core.Net
         // TODO: Find a better name for this?
         private Task<JObject> TypicalWorkflow(string method, object options)
         {
-            var uri = CreateUri(method);
-            var body = SerializeObject(options);
+            var uri = CreateUriFromMethod(method);
+            var body = SerializeToJson(options);
             return PostAndReadJson(uri, body);
         }
 
