@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedStation : IStation
+    public class ExpandedStation : IStationInfo, IStation
     {
+        private readonly string _token;
+
         internal ExpandedStation(ExpandedStationDto dto)
         {
             if (dto == null)
@@ -31,6 +33,8 @@ namespace Pandorum.Stations
             // TODO: HasEditableDescription = dto.AllowEditDescription;
             RequiresCleanAds = dto.RequiresCleanAds;
             Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
+
+            _token = dto.StationToken;
 
             ArtUrl = dto.ArtUrl;
             Music = new StationSeeds(dto.Music);
@@ -54,5 +58,7 @@ namespace Pandorum.Stations
         public string ArtUrl { get; }
         public StationSeeds Music { get; }
         public Feedback Feedback { get; }
+
+        string IStation.Token => _token;
     }
 }

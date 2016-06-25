@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Station : IStation
+    public class Station : IStationInfo, IStation
     {
+        private readonly string _token;
         private readonly QuickMixStationInfo _quickMix;
 
         internal Station(StationDto dto)
@@ -20,7 +21,6 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(dto));
 
             Name = dto.StationName;
-            Token = dto.StationToken;
             DateCreated = dto.DateCreated.ToDateTimeOffset();
             IsShared = dto.IsShared;
             DetailUrl = dto.StationDetailUrl;
@@ -33,6 +33,7 @@ namespace Pandorum.Stations
             Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
             IsQuickMix = dto.IsQuickMix;
             RequiresCleanAds = dto.RequiresCleanAds;
+            _token = dto.StationToken;
             _quickMix = new QuickMixStationInfo(dto.QuickMixStationIds); // this is a struct, so we eagerly allocate
         }
 
@@ -62,7 +63,7 @@ namespace Pandorum.Stations
             }
         }
 
-        internal string Token { get; }
+        string IStation.Token => _token;
 
         public override string ToString() => Name;
     }
