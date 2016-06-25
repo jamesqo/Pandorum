@@ -74,10 +74,7 @@ namespace Pandorum.Stations
 
         private static IEnumerable<Station> CreateStations(JToken result)
         {
-            var settings = new JsonSerializerSettings()
-                .WithCamelCase()
-                .AddConverter(new PandoraTimeConverter());
-
+            var settings = new JsonSerializerSettings().WithCamelCase();
             var serializer = settings.ToSerializer();
             var dtos = result["stations"].ToEnumerable<StationDto>(serializer);
             return dtos.Select(s => new Station(s));
