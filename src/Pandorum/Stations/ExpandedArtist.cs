@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedArtist : IArtist, IExpandedSeed
+    public class ExpandedArtist : IArtistInfo, IExpandedSeed
     {
         internal ExpandedArtist(ExpandedArtistDto dto)
         {
