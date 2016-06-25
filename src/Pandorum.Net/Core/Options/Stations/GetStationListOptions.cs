@@ -9,7 +9,7 @@ namespace Pandorum.Core.Options.Stations
     public class GetStationListOptions
     {
         public OptionalBool IncludeStationAtUrl { get; set; }
-        public string StationArtSize { get; set; } // Optional?
+        public string StationArtSize { get; set; }
         public OptionalBool IncludeAdAttributes { get; set; }
         public OptionalBool IncludeStationSeeds { get; set; }
         public OptionalBool IncludeShuffleInsteadOfQuickMix { get; set; }

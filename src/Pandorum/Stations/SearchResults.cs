@@ -14,11 +14,11 @@ namespace Pandorum.Stations
         [JsonConstructor] // used by Json.NET
         private SearchResults(Song[] songs, Artist[] artists, GenreStation[] genreStations)
         {
-            Debug.Assert(songs != null && artists != null);
+            Debug.Assert(songs != null && artists != null && genreStations != null);
 
             Songs = songs.AsReadOnly();
             Artists = artists.AsReadOnly();
-            GenreStations = genreStations?.AsReadOnly();
+            GenreStations = genreStations.AsReadOnly();
         }
 
         public IEnumerable<Song> Songs { get; }

@@ -72,15 +72,17 @@ namespace Pandorum.Stations
 
         private static IEnumerable<Station> CreateStations(JToken result)
         {
-            var options = SerializationOptions.CamelCaseProperties;
-            var converter = new PandoraTimeConverter(); // TODO: Is this too coupling? Should be aware we need to add such a converter here?
-            return result["stations"].ToEnumerable<Station>(options, converter);
+            var settings = new JsonSerializerSettings()
+                .WithCamelCase()
+                .AddConverter(new PandoraTimeConverter());
+
+            return result["stations"].ToEnumerable<Station>(settings.ToSerializer());
         }
 
         private static SearchResults CreateSearchResults(JToken result)
         {
-            var options = SerializationOptions.CamelCaseProperties;
-            return result.ToObject<SearchResults>(options);
+            var settings = new JsonSerializerSettings().WithCamelCase();
+            return result.ToObject<SearchResults>(settings.ToSerializer());
         }
     }
 }
