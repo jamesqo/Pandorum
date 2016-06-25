@@ -50,14 +50,11 @@ namespace Pandorum.Samples.Stations
                     {
                         Console.WriteLine($"Name: {song.Name}, Artist: {song.ArtistName}");
                     }
-
-                    if (results.GenreStations != null)
+                    
+                    Console.WriteLine("Stations:");
+                    foreach (var station in results.GenreStations)
                     {
-                        Console.WriteLine("Stations:");
-                        foreach (var station in results.GenreStations)
-                        {
-                            Console.WriteLine($"Name: {station.Name}");
-                        }
+                        Console.WriteLine($"Name: {station.Name}");
                     }
                 }
             });
