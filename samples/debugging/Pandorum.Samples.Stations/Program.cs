@@ -42,13 +42,13 @@ namespace Pandorum.Samples.Stations
                     Console.WriteLine("Artists:");
                     foreach (var artist in results.Artists)
                     {
-                        Console.WriteLine($"Name: {artist.Name}, Score: {artist.Score}");
+                        Console.WriteLine($"Name: {artist.Name}");
                     }
 
                     Console.WriteLine("Songs:");
                     foreach (var song in results.Songs)
                     {
-                        Console.WriteLine($"Name: {song.Name}, Score: {song.Score}, Artist: {song.ArtistName}");
+                        Console.WriteLine($"Name: {song.Name}, Artist: {song.ArtistName}");
                     }
 
                     if (results.GenreStations != null)
@@ -56,7 +56,7 @@ namespace Pandorum.Samples.Stations
                         Console.WriteLine("Stations:");
                         foreach (var station in results.GenreStations)
                         {
-                            Console.WriteLine($"Name: {station.Name}, Score: {station.Score}");
+                            Console.WriteLine($"Name: {station.Name}");
                         }
                     }
                 }
