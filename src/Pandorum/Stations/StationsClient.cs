@@ -46,9 +46,22 @@ namespace Pandorum.Stations
         }
 
         // out/ref have issues with async as well as lambdas,
-        // so commenting this out for now
-        // TODO: Find a way to expose this
-        // public Task<IEnumerable<Station>> List(out string checksum)
+        // so as a workaround we make the user allocate a
+        // ChecksumReference on the heap and modify that
+        // TODO: Remove closure allocations from here
+        // TODO: Avoid code dup with other List() overload
+        // TODO: Maybe when C# 7 is released, this can return
+        // Task<(IEnumerable<Station>, string)> using value tuples
+        public Task<IEnumerable<Station>> List(ChecksumReference reference)
+        {
+            if (reference == null)
+                throw new ArgumentNullException(nameof(reference));
+
+            var options = CreateStationListOptions();
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetStationList(options),
+                (result, _) => CreateStationsAndSetChecksum(result, reference));
+        }
 
         public Task<SearchResults> Search(string searchText)
         {
@@ -78,6 +91,13 @@ namespace Pandorum.Stations
             var serializer = settings.ToSerializer();
             var dtos = result["stations"].ToEnumerable<StationDto>(serializer);
             return dtos.Select(s => new Station(s));
+        }
+
+        private static IEnumerable<Station> CreateStationsAndSetChecksum(JToken result, ChecksumReference reference)
+        {
+            var stations = CreateStations(result);
+            reference.Checksum = (string)result["checksum"];
+            return stations;
         }
 
         private static SearchResults CreateSearchResults(JToken result)
