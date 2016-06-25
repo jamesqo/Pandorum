@@ -37,6 +37,15 @@ namespace Pandorum.Stations
                 (result, _) => (string)result["checksum"]);
         }
 
+        public async Task Delete(IStation station)
+        {
+            if (station == null)
+                throw new ArgumentNullException(nameof(station));
+
+            var options = CreateDeleteOptions(station);
+            await _inner._baseClient.DeleteStation(options).ConfigureAwait(false);
+        }
+
         public Task<IEnumerable<Station>> List()
         {
             var options = CreateStationListOptions();
@@ -69,7 +78,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(station == null ? nameof(station) : nameof(newName));
 
             var options = CreateRenameOptions(station, newName);
-            await _inner._baseClient.RenameStation(options);
+            await _inner._baseClient.RenameStation(options).ConfigureAwait(false);
         }
 
         public Task<SearchResults> Search(string searchText)
@@ -101,6 +110,11 @@ namespace Pandorum.Stations
                 StationToken = station.Token,
                 StationName = newName
             };
+        }
+
+        private static DeleteStationOptions CreateDeleteOptions(IStation station)
+        {
+            return new DeleteStationOptions { StationToken = station.Token };
         }
 
         private static IEnumerable<Station> CreateStations(JToken result)
