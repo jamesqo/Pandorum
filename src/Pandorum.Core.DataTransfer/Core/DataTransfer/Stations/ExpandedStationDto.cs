@@ -11,7 +11,7 @@ namespace Pandorum.Core.DataTransfer.Stations
     // responses from getStationList may include things
     // not in getStation.
 
-    public class ExtendedStationDto
+    public class ExpandedStationDto
     {
         public bool SuppressVideoAds { get; set; }
         public string StationId { get; set; }
@@ -22,7 +22,7 @@ namespace Pandorum.Core.DataTransfer.Stations
         public bool RequiresCleanAds { get; set; }
         public string StationToken { get; set; }
         public string StationName { get; set; }
-        public MusicDto Music { get; set; }
+        public StationSeedsDto Music { get; set; }
         public bool IsShared { get; set; }
         public bool AllowDelete { get; set; }
         public string[] Genre { get; set; }
