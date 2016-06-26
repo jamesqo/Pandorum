@@ -2,7 +2,9 @@
 using Pandorum.Samples.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Pandorum.Samples.Stations2
@@ -37,6 +39,13 @@ namespace Pandorum.Samples.Stations2
                     Console.WriteLine($"Renaming to {newName}");
                     created = await client.Stations.Rename(created, newName);
                     Console.WriteLine("Done.");
+
+                    Console.WriteLine("Getting expanded info...");
+                    var expanded = await client.Stations.ExpandInfo(created);
+
+                    WriteProperties(expanded, Console.Out);
+                    WriteProperties(expanded.Feedback, Console.Out);
+                    WriteProperties(expanded.Music, Console.Out);
                 }
                 finally
                 {
@@ -45,6 +54,14 @@ namespace Pandorum.Samples.Stations2
                     Console.WriteLine("Successfully deleted!");
                 }
             });
+        }
+
+        private static void WriteProperties(object obj, TextWriter dest)
+        {
+            foreach (var property in obj.GetType().GetRuntimeProperties())
+            {
+                dest.WriteLine($"{property.Name} = {property.GetValue(obj)}");
+            }
         }
     }
 }

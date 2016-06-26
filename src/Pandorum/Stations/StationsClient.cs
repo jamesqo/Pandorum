@@ -57,6 +57,17 @@ namespace Pandorum.Stations
             await _inner._baseClient.DeleteStation(options).ConfigureAwait(false);
         }
 
+        public Task<ExpandedStation> ExpandInfo(IStation station)
+        {
+            if (station == null)
+                throw new ArgumentNullException(nameof(station));
+
+            var options = CreateExpandInfoOptions(station);
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.GetStation(options),
+                (result, _) => CreateExpandedStation(result));
+        }
+
         public Task<IEnumerable<Station>> List()
         {
             var options = CreateStationListOptions();
@@ -133,6 +144,15 @@ namespace Pandorum.Stations
             return new DeleteStationOptions { StationToken = station.Token };
         }
 
+        private static GetStationOptions CreateExpandInfoOptions(IStation station)
+        {
+            return new GetStationOptions
+            {
+                StationToken = station.Token,
+                IncludeExtendedAttributes = true
+            };
+        }
+
         private static CreateStationOptions CreateCreateOptions(ISeed seed)
         {
             string musicType;
@@ -165,7 +185,8 @@ namespace Pandorum.Stations
         private static SearchResults CreateSearchResults(JToken result)
         {
             var settings = new JsonSerializerSettings().WithCamelCase();
-            var dto = result.ToObject<SearchResultsDto>(settings.ToSerializer());
+            var serializer = settings.ToSerializer();
+            var dto = result.ToObject<SearchResultsDto>(serializer);
             return new SearchResults(dto);
         }
 
@@ -175,6 +196,14 @@ namespace Pandorum.Stations
             var serializer = settings.ToSerializer();
             var dto = result.ToObject<StationDto>(serializer);
             return new Station(dto);
+        }
+
+        private static ExpandedStation CreateExpandedStation(JToken result)
+        {
+            var settings = new JsonSerializerSettings().WithCamelCase();
+            var serializer = settings.ToSerializer();
+            var dto = result.ToObject<ExpandedStationDto>(serializer);
+            return new ExpandedStation(dto);
         }
     }
 }
