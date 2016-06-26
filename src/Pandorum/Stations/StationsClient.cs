@@ -38,7 +38,9 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateAddSeedOptions(station, seed);
-            return
+            return this.AwaitAndSelectResult(
+                _inner._baseClient.AddMusic(options),
+                (result, _) => CreateRemovableSeed(result, seed.SeedType)); // TODO: Remove closure
         }
 
         public Task<string> Checksum()
@@ -184,6 +186,11 @@ namespace Pandorum.Stations
             return new CreateStationOptions { MusicType = musicType, MusicToken = seed.MusicToken };
         }
 
+        private static AddMusicOptions CreateAddSeedOptions(IStation station, IAddableSeed seed)
+        {
+            return new AddMusicOptions { StationToken = station.Token, MusicToken = seed.MusicToken };
+        }
+
         private static IEnumerable<Station> CreateStations(JToken result)
         {
             var settings = new JsonSerializerSettings().WithCamelCase();
@@ -221,6 +228,27 @@ namespace Pandorum.Stations
             var serializer = settings.ToSerializer();
             var dto = result.ToObject<ExpandedStationDto>(serializer);
             return new ExpandedStation(dto);
+        }
+
+        private static IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
+        {
+            var settings = new JsonSerializerSettings().WithCamelCase();
+            var serializer = settings.ToSerializer();
+
+            switch (type)
+            {
+                case SeedType.Artist:
+                    var artistDto = result.ToObject<ExpandedArtistDto>(serializer);
+                    return new ExpandedArtist(artistDto);
+                case SeedType.GenreStation:
+                    // TODO
+                    return default(IRemovableSeed);
+                case SeedType.Song:
+                    var songDto = result.ToObject<ExpandedSongDto>(serializer);
+                    return new ExpandedSong(songDto);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type));
+            }
         }
     }
 }
