@@ -30,6 +30,7 @@ namespace Pandorum.Stations
         public string ArtUrl { get; }
         public DateTimeOffset DateCreated { get; }
 
+        SeedType ISeed.SeedType => SeedType.Song;
         string IRemovableSeed.SeedId => _seedId;
     }
 }

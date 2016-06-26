@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Song : ISeed, ISongInfo
+    public class Song : IAddableSeed, ISongInfo
     {
         private readonly string _musicToken;
 
@@ -27,7 +27,8 @@ namespace Pandorum.Stations
         public string ArtistName { get; }
         internal int Score { get; }
 
-        string ISeed.MusicToken => _musicToken;
+        SeedType ISeed.SeedType => SeedType.GenreStation;
+        string IAddableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }

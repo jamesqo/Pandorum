@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Artist : ISeed, IArtistInfo
+    public class Artist : IAddableSeed, IArtistInfo
     {
         private readonly string _musicToken;
 
@@ -27,7 +27,8 @@ namespace Pandorum.Stations
         internal int Score { get; }
         internal bool IsLikelyMatch { get; }
 
-        string ISeed.MusicToken => _musicToken;
+        SeedType ISeed.SeedType => SeedType.Artist;
+        string IAddableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }

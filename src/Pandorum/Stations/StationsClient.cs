@@ -30,7 +30,7 @@ namespace Pandorum.Stations
         public GenreStationsClient Genre =>
             _genre ?? (_genre = new GenreStationsClient(_inner));
         
-        public Task<IRemovableSeed> AddSeed(IStation station, ISeed seed)
+        public Task<IRemovableSeed> AddSeed(IStation station, IAddableSeed seed)
         {
             if (station == null)
                 throw new ArgumentNullException(nameof(station));
@@ -48,7 +48,7 @@ namespace Pandorum.Stations
                 (result, _) => (string)result["checksum"]);
         }
 
-        public Task<Station> Create(ISeed seed)
+        public Task<Station> Create(IAddableSeed seed)
         {
             if (seed == null)
                 throw new ArgumentNullException(nameof(seed));
@@ -164,7 +164,7 @@ namespace Pandorum.Stations
             };
         }
 
-        private static CreateStationOptions CreateCreateOptions(ISeed seed)
+        private static CreateStationOptions CreateCreateOptions(IAddableSeed seed)
         {
             string musicType;
 

@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public interface IRemovableSeed : ISeed
+    public enum SeedType
     {
-        string SeedId { get; }
+        Unknown = 0,
+        Artist = 1,
+        Song = 2,
+        GenreStation = 3
     }
 }

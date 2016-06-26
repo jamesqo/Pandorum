@@ -20,6 +20,7 @@ namespace Pandorum.Stations
 
         public string Name { get; }
 
+        SeedType ISeed.SeedType => SeedType.Artist;
         string IRemovableSeed.SeedId => _seedId;
     }
 }
