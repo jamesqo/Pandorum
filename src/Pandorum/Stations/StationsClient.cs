@@ -107,6 +107,15 @@ namespace Pandorum.Stations
                 (result, _) => CreateStationsAndSetChecksum(result, reference));
         }
 
+        public async Task RemoveSeed(IRemovableSeed seed)
+        {
+            if (seed == null)
+                throw new ArgumentNullException(nameof(seed));
+
+            var options = CreateRemoveSeedOptions(seed);
+            await _inner._baseClient.DeleteMusic(options).ConfigureAwait(false);
+        }
+
         public Task<Station> Rename(IStation station, string newName)
         {
             if (station == null || newName == null)
@@ -127,6 +136,8 @@ namespace Pandorum.Stations
                 _inner._baseClient.Search(CreateSearchOptions(searchText)),
                 (result, _) => CreateSearchResults(result));
         }
+
+        // Options
 
         private static SearchOptions CreateSearchOptions(string searchText)
         {
@@ -190,6 +201,13 @@ namespace Pandorum.Stations
         {
             return new AddMusicOptions { StationToken = station.Token, MusicToken = seed.MusicToken };
         }
+
+        private static DeleteMusicOptions CreateRemoveSeedOptions(IRemovableSeed seed)
+        {
+            return new DeleteMusicOptions { SeedId = seed.SeedId };
+        }
+
+        // Result processing
 
         private static IEnumerable<Station> CreateStations(JToken result)
         {
