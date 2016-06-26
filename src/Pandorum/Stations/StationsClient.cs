@@ -29,6 +29,17 @@ namespace Pandorum.Stations
 
         public GenreStationsClient Genre =>
             _genre ?? (_genre = new GenreStationsClient(_inner));
+        
+        public Task<IRemovableSeed> AddSeed(IStation station, ISeed seed)
+        {
+            if (station == null)
+                throw new ArgumentNullException(nameof(station));
+            if (seed == null)
+                throw new ArgumentNullException(nameof(seed));
+
+            var options = CreateAddSeedOptions(station, seed);
+            return
+        }
 
         public Task<string> Checksum()
         {

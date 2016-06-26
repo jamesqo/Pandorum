@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public interface ISeed
+    public interface IAddableSeed
     {
         string MusicToken { get; }
     }
