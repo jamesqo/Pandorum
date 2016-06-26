@@ -168,12 +168,18 @@ namespace Pandorum.Stations
         {
             string musicType;
 
-            if (seed is Artist)
-                musicType = "artist";
-            else if (seed is Song || seed is GenreStation)
-                musicType = "song"; // TODO: Is this correct for genreStations?
-            else
-                throw new ArgumentException("The supplied seed must be an artist, song, or genre station.", nameof(seed));
+            switch (seed.SeedType)
+            {
+                case SeedType.Artist:
+                    musicType = "artist";
+                    break;
+                case SeedType.Song:
+                case SeedType.GenreStation: // TODO: Is this correct for genreStations?
+                    musicType = "song";
+                    break;
+                default:
+                    throw new ArgumentException("The supplied seed must be an artist, song, or genre station.", nameof(seed));
+            }
 
             return new CreateStationOptions { MusicType = musicType, MusicToken = seed.MusicToken };
         }
