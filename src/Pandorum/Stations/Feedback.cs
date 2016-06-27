@@ -10,6 +10,8 @@ namespace Pandorum.Stations
     {
         internal Feedback(FeedbackDto dto)
         {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
         }
     }
 }

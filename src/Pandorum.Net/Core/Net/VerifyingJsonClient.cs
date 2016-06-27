@@ -152,6 +152,8 @@ namespace Pandorum.Core.Net
 
                 int code = (int)response["code"];
                 string message = (string)response["message"];
+                if (Debugger.IsAttached)
+                    Debugger.Break();
                 throw new PandoraStatusException(code, message);
             }
         }

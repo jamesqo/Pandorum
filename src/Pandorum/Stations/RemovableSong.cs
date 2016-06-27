@@ -25,7 +25,6 @@ namespace Pandorum.Stations
 
         public string Name { get; }
         public string ArtistName { get; }
-
         public string ArtUrl { get; }
 
         SeedType ISeed.SeedType => SeedType.Song;

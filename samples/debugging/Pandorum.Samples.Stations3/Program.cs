@@ -82,7 +82,11 @@ namespace Pandorum.Samples.Stations3
 
                         foreach (var property in typeof(ExpandedStation).GetRuntimeProperties())
                         {
-                            Console.WriteLine($"{property} = {property.GetValue(expanded)}");
+                            try
+                            {
+                                Console.WriteLine($"{property} = {property.GetValue(expanded)}");
+                            }
+                            catch { }
                         }
 
                         var removable3 = expanded.Music.Genres.First();
@@ -95,7 +99,11 @@ namespace Pandorum.Samples.Stations3
 
                         foreach (var property in expanded.GetType().GetRuntimeProperties())
                         {
-                            Console.WriteLine($"{property} = {property.GetValue(expanded)}");
+                            try
+                            {
+                                Console.WriteLine($"{property} = {property.GetValue(expanded)}");
+                            }
+                            catch { }
                         }
                     }
                     finally

@@ -15,10 +15,13 @@ namespace Pandorum.Stations
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            // TODO
+            Name = dto.ArtistName;
+            ArtUrl = dto.ArtUrl;
+            _seedId = dto.SeedId;
         }
 
         public string Name { get; }
+        public string ArtUrl { get; }
 
         SeedType ISeed.SeedType => SeedType.Artist;
         string IRemovableSeed.SeedId => _seedId;

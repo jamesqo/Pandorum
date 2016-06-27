@@ -40,7 +40,7 @@ namespace Pandorum.Stations
             ArtUrl = dto.ArtUrl;
             Music = dto.IsQuickMix ? null : new StationSeeds(dto.Music); // "music" will not be present for quickMix stations
             // TODO: Find a more appropriate way to handle this than setting Music to null
-            Feedback = new Feedback(dto.Feedback);
+            Feedback = dto.IsQuickMix ? null : new Feedback(dto.Feedback); // Same here
 
             var stations = dto.QuickMixStationIds?.Select(id => new TokenStation(id));
             _quickMix = new QuickMixStationInfo(stations ?? ImmutableCache.EmptyArray<TokenStation>());
