@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
+    // TODO: Maybe this should be named to just 'Genre',
+    // to avoid confusion with actual stations.
+    // Note that things like client.Stations.Genre
+    // might have to be changed too.
+
     public class GenreStation : IAddableSeed, IGenreStationInfo
     {
         private readonly string _musicToken;
