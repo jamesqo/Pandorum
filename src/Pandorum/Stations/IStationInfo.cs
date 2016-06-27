@@ -24,7 +24,5 @@ namespace Pandorum.Stations
         
         IEnumerable<string> Tags { get; } // "genre": [...]
         QuickMixStationInfo QuickMix { get; }
-
-        // TODO: QuickMix?
     }
 }
