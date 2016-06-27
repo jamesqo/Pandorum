@@ -10,6 +10,8 @@ namespace Pandorum.Stations
         // Roslyn picks up on the IAddableSeed-based method if we attempt this
         // Task<ExpandedArtist> AddSeed(this StationsClient, IStation, Artist)
 
+        // TODO: Consider renaming to just Add, add extension method for Remove -> RemoveSeed
+
         public async static Task<ExpandedArtist> AddArtist(this StationsClient client, IStation station, Artist artist)
         {
             if (client == null)
