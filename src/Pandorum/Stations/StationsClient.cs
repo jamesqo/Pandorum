@@ -104,7 +104,8 @@ namespace Pandorum.Stations
             var options = CreateStationListOptions();
             var response = await _inner._baseClient.GetStationList(options).ConfigureAwait(false);
             var result = GetResult(response);
-            return CreateStationsAndSetChecksum(result, reference);
+            reference.Checksum = (string)result["checksum"];
+            return CreateStations(result);
         }
 
         public async Task RemoveSeed(IRemovableSeed seed)
@@ -216,13 +217,6 @@ namespace Pandorum.Stations
             var serializer = settings.ToSerializer();
             var dtos = result["stations"].ToEnumerable<StationDto>(serializer);
             return dtos.Select(s => new Station(s));
-        }
-
-        private static IEnumerable<Station> CreateStationsAndSetChecksum(JToken result, ChecksumReference reference)
-        {
-            var stations = CreateStations(result);
-            reference.Checksum = (string)result["checksum"];
-            return stations;
         }
 
         private static SearchResults CreateSearchResults(JToken result)
