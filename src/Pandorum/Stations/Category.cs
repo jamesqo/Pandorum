@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Category : IGrouping<string, GenreStation>
+    public class Category : IGrouping<string, Genre>
     {
-        private readonly IEnumerable<GenreStation> _stations;
+        private readonly IEnumerable<Genre> _genres;
 
         internal Category(CategoryDto dto)
         {
@@ -20,15 +20,15 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(dto));
 
             Name = dto.CategoryName;
-            _stations = dto.Stations.Select(s => new GenreStation(s));
+            _genres = dto.Stations.Select(g => new Genre(g));
         }
 
         public string Name { get; }
 
-        string IGrouping<string, GenreStation>.Key => Name;
-        IEnumerator<GenreStation> IEnumerable<GenreStation>.GetEnumerator() => _stations.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => _stations.GetEnumerator();
-
+        public IEnumerator<Genre> GetEnumerator() => _genres.GetEnumerator();
         public override string ToString() => Name;
+
+        string IGrouping<string, Genre>.Key => Name;
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

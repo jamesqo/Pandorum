@@ -13,11 +13,11 @@ namespace Pandorum.Stations
     // Note that things like client.Stations.Genre
     // might have to be changed too.
 
-    public class GenreStation : ICreatableSeed, IGenreStationInfo
+    public class Genre : ICreatableSeed, IGenreInfo
     {
         private readonly string _musicToken;
 
-        internal GenreStation(GenreStationDto dto)
+        internal Genre(GenreDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -27,7 +27,7 @@ namespace Pandorum.Stations
             _musicToken = dto.MusicToken;
         }
 
-        internal GenreStation(GenreStationDto2 dto)
+        internal Genre(GenreDto2 dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -40,7 +40,7 @@ namespace Pandorum.Stations
         public string Name { get; }
         internal int Score { get; }
 
-        SeedType ISeed.SeedType => SeedType.GenreStation;
+        SeedType ISeed.SeedType => SeedType.Genre;
         string ICreatableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;

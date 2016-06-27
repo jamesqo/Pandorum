@@ -12,11 +12,11 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class GenreStationsClient
+    public class GenresClient
     {
         private readonly PandoraClient _inner;
 
-        internal GenreStationsClient(PandoraClient inner)
+        internal GenresClient(PandoraClient inner)
         {
             if (inner == null)
                 throw new ArgumentNullException(nameof(inner));

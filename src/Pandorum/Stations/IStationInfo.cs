@@ -22,7 +22,7 @@ namespace Pandorum.Stations
         bool HasEditableDescription { get; }
         bool RequiresCleanAds { get; }
         
-        IEnumerable<string> Genres { get; }
+        IEnumerable<string> Tags { get; } // "genre": [...]
 
         // TODO: QuickMix?
     }

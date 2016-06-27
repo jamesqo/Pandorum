@@ -11,6 +11,6 @@ namespace Pandorum.Core.DataTransfer.Stations
         public string Explanation { get; set; }
         public SongDto[] Songs { get; set; }
         public ArtistDto[] Artists { get; set; }
-        public GenreStationDto[] GenreStations { get; set; }
+        public GenreDto[] GenreStations { get; set; }
     }
 }

@@ -22,16 +22,16 @@ namespace Pandorum.Samples.Stations3
                 {
                     Console.WriteLine("Testing genreStations API...");
 
-                    var checksum = await client.Stations.Genre.Checksum();
+                    var checksum = await client.Stations.Genres.Checksum();
                     Console.WriteLine($"Checksum: {checksum}");
 
-                    var list = await client.Stations.Genre.List();
+                    var list = await client.Stations.Genres.List();
                     // TODO: Category should implement IGrouping
                     // Return type may want to implement ILookup
                     foreach (var category in list)
                     {
                         Console.WriteLine(category.Name);
-                        foreach (var station in category.Stations)
+                        foreach (var station in category)
                         {
                             Console.WriteLine(station);
                         }
@@ -46,10 +46,10 @@ namespace Pandorum.Samples.Stations3
                     var results = await client.Stations.Search(query);
                     Console.WriteLine("Finished searching.");
 
-                    var genreStation = results.GenreStations.First();
-                    Console.WriteLine($"Calling createStation with genre station {genreStation}...");
+                    var genre = results.Genres.First();
+                    Console.WriteLine($"Calling createStation with genre {genre}...");
 
-                    var station = await client.Stations.Create(genreStation);
+                    var station = await client.Stations.Create(genre);
 
                     try
                     {
@@ -85,8 +85,8 @@ namespace Pandorum.Samples.Stations3
                             Console.WriteLine($"{property} = {property.GetValue(expanded)}");
                         }
 
-                        var removable3 = expanded.Music.GenreStations.First();
-                        Console.WriteLine($"Removing genre station {removable3}...");
+                        var removable3 = expanded.Music.Genres.First();
+                        Console.WriteLine($"Removing genre {removable3}...");
                         await client.Stations.RemoveSeed(removable3);
                         Console.WriteLine("Finished!");
 

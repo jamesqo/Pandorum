@@ -16,11 +16,11 @@ namespace Pandorum.Stations
 
             Songs = dto.Songs.Select(s => new RemovableSong(s));
             Artists = dto.Artists.Select(a => new RemovableArtist(a));
-            GenreStations = dto.Genres.Select(g => new RemovableGenreStation(g));
+            Genres = dto.Genres.Select(g => new RemovableGenre(g));
         }
 
         public IEnumerable<RemovableSong> Songs { get; }
         public IEnumerable<RemovableArtist> Artists { get; }
-        public IEnumerable<RemovableGenreStation> GenreStations { get; }
+        public IEnumerable<RemovableGenre> Genres { get; }
     }
 }

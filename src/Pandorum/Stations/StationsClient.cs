@@ -18,7 +18,7 @@ namespace Pandorum.Stations
     {
         private readonly PandoraClient _inner;
 
-        private GenreStationsClient _genre;
+        private GenresClient _genres;
 
         internal StationsClient(PandoraClient inner)
         {
@@ -28,8 +28,8 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
-        public GenreStationsClient Genre =>
-            _genre ?? (_genre = new GenreStationsClient(_inner));
+        public GenresClient Genres =>
+            _genres ?? (_genres = new GenresClient(_inner));
 
         // TODO: Expose other AddSeed overloads, which return more information
         // based on the type given. Example:
@@ -198,11 +198,11 @@ namespace Pandorum.Stations
                     musicType = "artist";
                     break;
                 case SeedType.Song:
-                case SeedType.GenreStation: // TODO: Is this correct for genreStations?
+                case SeedType.Genre: // TODO: Is this correct for genreStations?
                     musicType = "song";
                     break;
                 default:
-                    throw new ArgumentException("The supplied seed must be an artist, song, or genre station.", nameof(seed));
+                    throw new ArgumentException("The supplied seed must be an artist, song, or genre.", nameof(seed));
             }
 
             return new CreateStationOptions { MusicType = musicType, MusicToken = seed.MusicToken };

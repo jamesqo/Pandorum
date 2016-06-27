@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    internal interface IGenreStationInfo
+    internal interface IGenreInfo
     {
         string Name { get; }
     }

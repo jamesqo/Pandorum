@@ -30,7 +30,7 @@ namespace Pandorum.Stations
             CanAddMusic = dto.AllowAddMusic;
             SuppressesVideoAds = dto.SuppressVideoAds;
             HasEditableDescription = dto.AllowEditDescription;
-            Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
+            Tags = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
             IsQuickMix = dto.IsQuickMix;
             RequiresCleanAds = dto.RequiresCleanAds;
             _token = dto.StationToken;
@@ -47,7 +47,7 @@ namespace Pandorum.Stations
         public bool CanAddMusic { get; }
         public bool SuppressesVideoAds { get; }
         public bool HasEditableDescription { get; }
-        public IEnumerable<string> Genres { get; }
+        public IEnumerable<string> Tags { get; }
         public bool IsQuickMix { get; }
         public bool RequiresCleanAds { get; }
 

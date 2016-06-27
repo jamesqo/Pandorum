@@ -10,6 +10,6 @@ namespace Pandorum.Stations
         Unknown = 0,
         Artist = 1,
         Song = 2,
-        GenreStation = 3
+        Genre = 3
     }
 }

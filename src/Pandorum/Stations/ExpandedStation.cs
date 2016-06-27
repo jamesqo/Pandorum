@@ -32,7 +32,7 @@ namespace Pandorum.Stations
             SuppressesVideoAds = dto.SuppressVideoAds;
             // TODO: HasEditableDescription = dto.AllowEditDescription;
             RequiresCleanAds = dto.RequiresCleanAds;
-            Genres = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
+            Tags = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
 
             _token = dto.StationToken;
 
@@ -53,7 +53,7 @@ namespace Pandorum.Stations
         public bool SuppressesVideoAds { get; }
         public bool HasEditableDescription { get; }
         public bool RequiresCleanAds { get; }
-        public IEnumerable<string> Genres { get; }
+        public IEnumerable<string> Tags { get; }
 
         public string ArtUrl { get; }
         public StationSeeds Music { get; }

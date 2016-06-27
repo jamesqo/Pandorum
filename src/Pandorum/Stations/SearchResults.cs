@@ -20,13 +20,13 @@ namespace Pandorum.Stations
             Explanation = dto.Explanation;
             Songs = dto.Songs.Select(s => new Song(s));
             Artists = dto.Artists.Select(a => new Artist(a));
-            GenreStations = dto.GenreStations?.Select(g => new GenreStation(g)) ?? ImmutableCache.EmptyArray<GenreStation>();
+            Genres = dto.GenreStations?.Select(g => new Genre(g)) ?? ImmutableCache.EmptyArray<Genre>();
         }
 
         public string Explanation { get; }
 
         public IEnumerable<Song> Songs { get; }
         public IEnumerable<Artist> Artists { get; }
-        public IEnumerable<GenreStation> GenreStations { get; }
+        public IEnumerable<Genre> Genres { get; }
     }
 }

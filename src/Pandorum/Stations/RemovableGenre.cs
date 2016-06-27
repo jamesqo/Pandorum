@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class RemovableGenreStation : IRemovableSeed, IGenreStationInfo
+    public class RemovableGenre : IRemovableSeed, IGenreInfo
     {
         private readonly string _seedId;
 
-        internal RemovableGenreStation(RemovableGenreStationDto dto)
+        internal RemovableGenre(RemovableGenreDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -22,6 +22,6 @@ namespace Pandorum.Stations
         public string Name { get; }
 
         string IRemovableSeed.SeedId => _seedId;
-        SeedType ISeed.SeedType => SeedType.GenreStation;
+        SeedType ISeed.SeedType => SeedType.Genre;
     }
 }
