@@ -12,6 +12,7 @@ namespace Pandorum.Stations
     public class ExpandedStation : IStation, IStationInfo
     {
         private readonly string _token;
+        private readonly QuickMixStationInfo _quickMix;
 
         internal ExpandedStation(ExpandedStationDto dto)
         {
@@ -30,15 +31,18 @@ namespace Pandorum.Stations
             IsQuickMix = dto.IsQuickMix;
             CanAddMusic = dto.AllowAddMusic;
             SuppressesVideoAds = dto.SuppressVideoAds;
-            // TODO: HasEditableDescription = dto.AllowEditDescription;
+            HasEditableDescription = dto.AllowEditDescription;
             RequiresCleanAds = dto.RequiresCleanAds;
             Tags = dto.Genre?.AsReadOnly().AsEnumerable() ?? ImmutableCache.EmptyArray<string>();
 
             _token = dto.StationToken;
 
             ArtUrl = dto.ArtUrl;
-            Music = new StationSeeds(dto.Music);
+            Music = dto.IsQuickMix ? null : new StationSeeds(dto.Music); // "music" will not be present for quickMix stations
+            // TODO: Find a more appropriate way to handle this than setting Music to null
             Feedback = new Feedback(dto.Feedback);
+
+            _quickMix = new QuickMixStationInfo(dto.QuickMixStationIds);
         }
 
         public string Name { get; }
@@ -58,6 +62,18 @@ namespace Pandorum.Stations
         public string ArtUrl { get; }
         public StationSeeds Music { get; }
         public Feedback Feedback { get; }
+
+        public QuickMixStationInfo QuickMix
+        {
+            get
+            {
+                if (!IsQuickMix)
+                    throw new InvalidOperationException($"You cannot call {nameof(QuickMix)} on a station that isn't a QuickMix station.");
+
+                Debug.Assert(_quickMix.StationIds != null);
+                return _quickMix;
+            }
+        }
 
         string IStation.Token => _token;
     }

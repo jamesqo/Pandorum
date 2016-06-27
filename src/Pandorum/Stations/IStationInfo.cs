@@ -23,6 +23,7 @@ namespace Pandorum.Stations
         bool RequiresCleanAds { get; }
         
         IEnumerable<string> Tags { get; } // "genre": [...]
+        QuickMixStationInfo QuickMix { get; }
 
         // TODO: QuickMix?
     }
