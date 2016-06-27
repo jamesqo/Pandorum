@@ -28,7 +28,7 @@ namespace Pandorum.Core.Net.Http
         {
             var response = await task.ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-            return await func(response.Content);
+            return await func(response.Content).ConfigureAwait(false);
         }
 
         private async static Task<JObject> AwaitAndReadJson(Task<string> task)
