@@ -9,7 +9,8 @@ namespace Pandorum.Core.DataTransfer.Stations
 
     public class StationSeedsDto
     {
-        public ExpandedSongDto[] Songs { get; set; }
-        public ExpandedArtistDto[] Artists { get; set; }
+        public RemovableSongDto[] Songs { get; set; }
+        public RemovableArtistDto[] Artists { get; set; }
+        public RemovableGenreStationDto[] Genres { get; set; }
     }
 }

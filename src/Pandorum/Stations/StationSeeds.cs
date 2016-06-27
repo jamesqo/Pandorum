@@ -14,12 +14,13 @@ namespace Pandorum.Stations
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Songs = dto.Songs.Select(s => new ExpandedSong(s));
-            Artists = dto.Artists.Select(a => new ExpandedArtist(a));
+            Songs = dto.Songs.Select(s => new RemovableSong(s));
+            Artists = dto.Artists.Select(a => new RemovableArtist(a));
+            GenreStations = dto.Genres.Select(g => new RemovableGenreStation(g));
         }
 
-        public IEnumerable<ExpandedSong> Songs { get; }
-        public IEnumerable<ExpandedArtist> Artists { get; }
-        // TODO: Genres
+        public IEnumerable<RemovableSong> Songs { get; }
+        public IEnumerable<RemovableArtist> Artists { get; }
+        public IEnumerable<RemovableGenreStation> GenreStations { get; }
     }
 }

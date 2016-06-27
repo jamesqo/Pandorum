@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class ExpandedSong : IRemovableSeed, ISongInfo
+    public class RemovableSong : IRemovableSeed, ISongInfo
     {
         private readonly string _seedId;
 
-        internal ExpandedSong(ExpandedSongDto dto)
+        internal RemovableSong(RemovableSongDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
@@ -19,7 +19,6 @@ namespace Pandorum.Stations
             Name = dto.SongName;
             ArtistName = dto.ArtistName;
             ArtUrl = dto.ArtUrl;
-            DateCreated = dto.DateCreated.ToDateTimeOffset();
 
             _seedId = dto.SeedId;
         }
@@ -28,7 +27,6 @@ namespace Pandorum.Stations
         public string ArtistName { get; }
 
         public string ArtUrl { get; }
-        public DateTimeOffset DateCreated { get; }
 
         SeedType ISeed.SeedType => SeedType.Song;
         string IRemovableSeed.SeedId => _seedId;
