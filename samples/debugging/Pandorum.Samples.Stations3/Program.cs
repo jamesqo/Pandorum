@@ -19,60 +19,48 @@ namespace Pandorum.Samples.Stations3
                 client.Settings.Endpoint = PandoraEndpoints.Tuner.HttpUri;
 
                 Console.WriteLine("Creating new test station...");
-                var query = Environment.GetEnvironmentVariable("PANDORUM_ARTIST_QUERY") ?? "Jason Derulo";
+                var query = Environment.GetEnvironmentVariable("PANDORUM_GENRE_QUERY") ?? "Pop";
 
                 var results = await client.Stations.Search(query);
                 Console.WriteLine("Finished searching.");
 
-                var artist = results.Artists.First();
-                Console.WriteLine($"Calling createStation with artist {artist}...");
+                var genreStation = results.GenreStations.First();
+                Console.WriteLine($"Calling createStation with genre station {genreStation}...");
 
-                var station = await client.Stations.Create(artist);
+                var station = await client.Stations.Create(genreStation);
 
                 try
                 {
                     Console.WriteLine("Adding another artist seed...");
-                    var query2 = Environment.GetEnvironmentVariable("PANDORUM_ARTIST_QUERY_2") ?? "Taylor Swift";
+                    var query2 = Environment.GetEnvironmentVariable("PANDORUM_ARTIST_QUERY") ?? "Jason Derulo";
                     Console.WriteLine($"Searching for {query2}");
 
                     var results2 = await client.Stations.Search(query2);
-                    var artist2 = results2.Artists.First();
+                    var artist = results2.Artists.First();
 
-                    Console.WriteLine($"Adding {artist2} to the mix...");
-                    var removable = await client.Stations.AddSeed(station, artist2);
+                    Console.WriteLine($"Adding {artist} to the mix...");
+                    var removable = await client.Stations.AddSeed(station, artist);
 
                     Console.WriteLine("Adding a song seed...");
-                    var songQuery = Environment.GetEnvironmentVariable("PANDORUM_SONG_QUERY") ?? "Counting Stars";
-                    Console.WriteLine($"Searching for: {songQuery}");
+                    var query3 = Environment.GetEnvironmentVariable("PANDORUM_SONG_QUERY") ?? "Counting Stars";
+                    Console.WriteLine($"Searching for: {query3}");
 
-                    var songResults = await client.Stations.Search(songQuery);
-                    var song = songResults.Songs.FirstOrDefault(s => s.ArtistName == "One Republic") ?? songResults.Songs.First();
+                    var results3 = await client.Stations.Search(query3);
+                    var song = results3.Songs.FirstOrDefault(s => s.ArtistName == "One Republic") ?? results3.Songs.First();
                     Console.WriteLine($"Adding seed {song} to the station...");
 
                     var removable2 = await client.Stations.AddSeed(station, song);
                     Console.WriteLine("Finished.");
-                    // Console.WriteLine($"artUrl of song: {expandedSong.ArtUrl}");
-                    // Console.WriteLine($"dateCreated: {expandedSong.DateCreated}");
-
-                    Console.WriteLine("Adding a genre station to the mix...");
-                    var query3 = Environment.GetEnvironmentVariable("PANDORUM_GENRE_QUERY") ?? "Pop";
-                    Console.WriteLine($"Searching for: {query3}");
-
-                    var results3 = await client.Stations.Search(query3);
-                    var genreStation = results3.GenreStations.First();
-
-                    Console.WriteLine($"Adding genre station: {genreStation}");
-                    var removable3 = await client.Stations.AddSeed(station, genreStation);
-                    // var expanded = await client.Stations.AddGenreStation(station, genreStation);
-                    // Console.WriteLine(...);
+                    // Console.WriteLine($"artUrl of song: {removable2.ArtUrl}");
+                    // Console.WriteLine($"dateCreated: {removable2.DateCreated}");
 
                     Console.WriteLine("Finally! Getting extended info...");
-                    var expanded2 = await client.Stations.ExpandInfo(station);
-                    Debug.Assert(expanded2.GetType() == typeof(ExpandedStation)); // should not subclass
+                    var expanded = await client.Stations.ExpandInfo(station);
+                    Debug.Assert(expanded.GetType() == typeof(ExpandedStation)); // should not subclass
 
                     foreach (var property in typeof(ExpandedStation).GetRuntimeProperties())
                     {
-                        Console.WriteLine($"{property} = {property.GetValue(expanded2)}");
+                        Console.WriteLine($"{property} = {property.GetValue(expanded)}");
                     }
                 }
                 finally
