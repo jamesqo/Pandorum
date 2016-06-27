@@ -10,11 +10,37 @@ namespace Pandorum.Samples.Helpers
         private static string s_username;
         private static string s_password;
 
-        public static string Username =>
-            s_username ?? (s_username = Environment.GetEnvironmentVariable("PANDORUM_USERNAME"));
+        public static string Username
+        {
+            get
+            {
+                if (s_username == null)
+                {
+                    if ((s_username = Environment.GetEnvironmentVariable("PANDORUM_USERNAME")) == null)
+                    {
+                        throw new InvalidOperationException("The PANDORUM_USERNAME environment variable is not set.");
+                    }
+                }
 
-        public static string Password =>
-            s_password ?? (s_password = Environment.GetEnvironmentVariable("PANDORUM_PASSWORD"));
+                return s_username;
+            }
+        }
+
+        public static string Password
+        {
+            get
+            {
+                if (s_password == null)
+                {
+                    if ((s_password = Environment.GetEnvironmentVariable("PANDORUM_PASSWORD")) == null)
+                    {
+                        throw new InvalidOperationException("The PANDORUM_PASSWORD environment variable is not set.");
+                    }
+                }
+
+                return s_password;
+            }
+        }
 
         public async static Task<PandoraClient> Login()
         {

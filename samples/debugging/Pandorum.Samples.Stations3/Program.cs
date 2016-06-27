@@ -1,4 +1,5 @@
-﻿using Pandorum.Samples.Helpers;
+﻿using Pandorum.Net;
+using Pandorum.Samples.Helpers;
 using Pandorum.Stations;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace Pandorum.Samples.Stations3
         {
             PandoraHelpers.Session(async client =>
             {
+                client.Settings.Endpoint = PandoraEndpoints.Tuner.HttpUri;
+
                 Console.WriteLine("Creating new test station...");
                 var query = Environment.GetEnvironmentVariable("PANDORUM_ARTIST_QUERY") ?? "Jason Derulo";
 
