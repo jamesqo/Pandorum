@@ -27,6 +27,10 @@ namespace Pandorum.Stations
         internal int Score { get; }
         internal bool IsLikelyMatch { get; }
 
+        // musicToken starts with C for composers,
+        // R for artists
+        public bool IsComposer => _musicToken[0] == 'C';
+
         SeedType ISeed.SeedType => SeedType.Artist;
         string ICreatableSeed.MusicToken => _musicToken;
 
