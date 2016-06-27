@@ -60,7 +60,7 @@ namespace Pandorum.Stations
             return (string)result["checksum"];
         }
 
-        public async Task<Station> Create(IAddableSeed seed)
+        public async Task<Station> Create(ICreatableSeed seed)
         {
             if (seed == null)
                 throw new ArgumentNullException(nameof(seed));
@@ -188,7 +188,7 @@ namespace Pandorum.Stations
             };
         }
 
-        private static CreateStationOptions CreateCreateOptions(IAddableSeed seed)
+        private static CreateStationOptions CreateCreateOptions(ICreatableSeed seed)
         {
             string musicType;
 

@@ -28,7 +28,7 @@ namespace Pandorum.Stations
         internal int Score { get; }
 
         SeedType ISeed.SeedType => SeedType.Song;
-        string IAddableSeed.MusicToken => _musicToken;
+        string ICreatableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }

@@ -28,7 +28,7 @@ namespace Pandorum.Stations
         internal bool IsLikelyMatch { get; }
 
         SeedType ISeed.SeedType => SeedType.Artist;
-        string IAddableSeed.MusicToken => _musicToken;
+        string ICreatableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }

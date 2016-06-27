@@ -13,7 +13,7 @@ namespace Pandorum.Stations
     // Note that things like client.Stations.Genre
     // might have to be changed too.
 
-    public class GenreStation : IAddableSeed, IGenreStationInfo
+    public class GenreStation : ICreatableSeed, IGenreStationInfo
     {
         private readonly string _musicToken;
 
@@ -41,7 +41,7 @@ namespace Pandorum.Stations
         internal int Score { get; }
 
         SeedType ISeed.SeedType => SeedType.GenreStation;
-        string IAddableSeed.MusicToken => _musicToken;
+        string ICreatableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
     }
