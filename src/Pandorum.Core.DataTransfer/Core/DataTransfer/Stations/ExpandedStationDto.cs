@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Core.DataTransfer.Stations
 {
-    // MAINTAINABILITY: Although ExtendedStationDto
+    // MAINTAINABILITY: Although ExpandedStationDto
     // shares a lot of properties with StationDto,
     // we don't use inheritance since in the future
     // responses from getStationList may include things
