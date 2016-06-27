@@ -10,6 +10,18 @@ namespace Pandorum.Stations
 {
     public class Artist : IAddableSeed, IArtistInfo
     {
+        public struct SearchInfo
+        {
+            internal SearchInfo(int score, bool likelyMatch)
+            {
+                Score = score;
+                IsLikelyMatch = likelyMatch;
+            }
+
+            public int Score { get; }
+            public bool IsLikelyMatch { get; }
+        }
+
         private readonly string _musicToken;
 
         internal Artist(ArtistDto dto)
@@ -17,15 +29,13 @@ namespace Pandorum.Stations
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Score = dto.Score;
             Name = dto.ArtistName;
-            IsLikelyMatch = dto.LikelyMatch;
+            Search = new SearchInfo(dto.Score, dto.LikelyMatch);
             _musicToken = dto.MusicToken;
         }
 
         public string Name { get; }
-        public bool IsLikelyMatch { get; }
-        internal int Score { get; }
+        public SearchInfo Search { get; }
 
         // musicToken starts with C for composers,
         // R for artists
