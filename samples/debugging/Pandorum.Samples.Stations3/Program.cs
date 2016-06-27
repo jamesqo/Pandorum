@@ -39,7 +39,7 @@ namespace Pandorum.Samples.Stations3
                     var artist2 = results2.Artists.First();
 
                     Console.WriteLine($"Adding {artist2} to the mix...");
-                    var expanded = await client.Stations.AddArtist(station, artist2);
+                    var removable = await client.Stations.AddSeed(station, artist2);
 
                     Console.WriteLine("Adding a song seed...");
                     var songQuery = Environment.GetEnvironmentVariable("PANDORUM_SONG_QUERY") ?? "Counting Stars";
@@ -49,10 +49,10 @@ namespace Pandorum.Samples.Stations3
                     var song = songResults.Songs.FirstOrDefault(s => s.ArtistName == "One Republic") ?? songResults.Songs.First();
                     Console.WriteLine($"Adding seed {song} to the station...");
 
-                    var expandedSong = await client.Stations.AddSong(station, song);
+                    var removable2 = await client.Stations.AddSeed(station, song);
                     Console.WriteLine("Finished.");
-                    Console.WriteLine($"artUrl of song: {expandedSong.ArtUrl}");
-                    Console.WriteLine($"dateCreated: {expandedSong.DateCreated}");
+                    // Console.WriteLine($"artUrl of song: {expandedSong.ArtUrl}");
+                    // Console.WriteLine($"dateCreated: {expandedSong.DateCreated}");
 
                     Console.WriteLine("Adding a genre station to the mix...");
                     var query3 = Environment.GetEnvironmentVariable("PANDORUM_GENRE_QUERY") ?? "Pop";
@@ -62,7 +62,7 @@ namespace Pandorum.Samples.Stations3
                     var genreStation = results3.GenreStations.First();
 
                     Console.WriteLine($"Adding genre station: {genreStation}");
-                    var removable = await client.Stations.AddSeed(station, genreStation);
+                    var removable3 = await client.Stations.AddSeed(station, genreStation);
                     // var expanded = await client.Stations.AddGenreStation(station, genreStation);
                     // Console.WriteLine(...);
 

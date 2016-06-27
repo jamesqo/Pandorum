@@ -35,6 +35,10 @@ namespace Pandorum.Stations
         // based on the type given. Example:
         // Task<AddedArtist> AddSeed(IStation station, Artist artist)
         // Should include things like artistName, artUrl, etc.
+
+        // Make the runtime-return type of this method return different types
+        // based on seed.SeedType, and have those methods simply call this
+        // method and cast downwards.
         
         public async Task<IRemovableSeed> AddSeed(IStation station, IAddableSeed seed)
         {
@@ -250,23 +254,11 @@ namespace Pandorum.Stations
 
         private static IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
         {
-            var settings = new JsonSerializerSettings().WithCamelCase();
-            var serializer = settings.ToSerializer();
+            // TODO: Return different types depending on the SeedType
+            // TODO: Should there be a DTO for this? No, right?
 
-            switch (type)
-            {
-                case SeedType.Artist:
-                    var artistDto = result.ToObject<ExpandedArtistDto>(serializer);
-                    return new ExpandedArtist(artistDto);
-                case SeedType.GenreStation:
-                    // TODO
-                    return default(IRemovableSeed);
-                case SeedType.Song:
-                    var songDto = result.ToObject<ExpandedSongDto>(serializer);
-                    return new ExpandedSong(songDto);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type));
-            }
+            string seedId = (string)result["seedId"];
+            return new RemovableSeed(seedId, type);
         }
     }
 }
