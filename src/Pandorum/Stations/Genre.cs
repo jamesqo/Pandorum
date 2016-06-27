@@ -10,6 +10,16 @@ namespace Pandorum.Stations
 {
     public class Genre : ICreatableSeed, IGenreInfo
     {
+        public struct SearchInfo
+        {
+            internal SearchInfo(int score)
+            {
+                Score = score;
+            }
+
+            public int Score { get; }
+        }
+
         private readonly string _musicToken;
 
         internal Genre(GenreDto dto)
@@ -17,8 +27,8 @@ namespace Pandorum.Stations
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Score = dto.Score;
             Name = dto.StationName;
+            Search = new SearchInfo(dto.Score);
             _musicToken = dto.MusicToken;
         }
 
@@ -33,7 +43,8 @@ namespace Pandorum.Stations
         }
 
         public string Name { get; }
-        internal int Score { get; }
+        public SearchInfo Search { get; } // TODO: Would be nice to throw an exception if
+        // this was initialized by GenreDto2, where this isn't set
 
         SeedType ISeed.SeedType => SeedType.Genre;
         string ICreatableSeed.MusicToken => _musicToken;

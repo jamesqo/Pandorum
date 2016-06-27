@@ -10,6 +10,16 @@ namespace Pandorum.Stations
 {
     public class Song : IAddableSeed, ISongInfo
     {
+        public struct SearchInfo
+        {
+            internal SearchInfo(int score)
+            {
+                Score = score;
+            }
+
+            public int Score { get; }
+        }
+
         private readonly string _musicToken;
 
         internal Song(SongDto dto)
@@ -17,15 +27,15 @@ namespace Pandorum.Stations
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Score = dto.Score;
             Name = dto.SongName;
             ArtistName = dto.ArtistName;
+            Search = new SearchInfo(dto.Score);
             _musicToken = dto.MusicToken;
         }
         
         public string Name { get; }
         public string ArtistName { get; }
-        internal int Score { get; }
+        public SearchInfo Search { get; }
 
         SeedType ISeed.SeedType => SeedType.Song;
         string ICreatableSeed.MusicToken => _musicToken;
