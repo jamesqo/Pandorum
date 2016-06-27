@@ -20,5 +20,6 @@ namespace Pandorum.Stations
 
         public IEnumerable<ExpandedSong> Songs { get; }
         public IEnumerable<ExpandedArtist> Artists { get; }
+        // TODO: Genres
     }
 }

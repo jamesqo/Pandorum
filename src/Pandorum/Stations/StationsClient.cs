@@ -30,6 +30,11 @@ namespace Pandorum.Stations
 
         public GenreStationsClient Genre =>
             _genre ?? (_genre = new GenreStationsClient(_inner));
+
+        // TODO: Expose other AddSeed overloads, which return more information
+        // based on the type given. Example:
+        // Task<AddedArtist> AddSeed(IStation station, Artist artist)
+        // Should include things like artistName, artUrl, etc.
         
         public async Task<IRemovableSeed> AddSeed(IStation station, IAddableSeed seed)
         {
