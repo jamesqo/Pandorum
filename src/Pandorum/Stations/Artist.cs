@@ -24,8 +24,8 @@ namespace Pandorum.Stations
         }
 
         public string Name { get; }
+        public bool IsLikelyMatch { get; }
         internal int Score { get; }
-        internal bool IsLikelyMatch { get; }
 
         // musicToken starts with C for composers,
         // R for artists
