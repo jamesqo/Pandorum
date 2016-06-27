@@ -13,7 +13,7 @@ namespace Pandorum.Samples.Stations3
     {
         public static void Main(string[] args)
         {
-            PandoraHelpers.Login(async client =>
+            PandoraHelpers.Session(async client =>
             {
                 Console.WriteLine("Creating new test station...");
                 var query = Environment.GetEnvironmentVariable("PANDORUM_ARTIST_QUERY") ?? "Jason Derulo";

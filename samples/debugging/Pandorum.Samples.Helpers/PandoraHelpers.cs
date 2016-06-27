@@ -33,7 +33,7 @@ namespace Pandorum.Samples.Helpers
         }
 
         // Logs in and blocks synchronously until func is completed
-        public static void Login(Func<PandoraClient, Task> func)
+        public static void Session(Func<PandoraClient, Task> func)
         {
             AsyncHelpers.RunSynchronously(async () =>
             {

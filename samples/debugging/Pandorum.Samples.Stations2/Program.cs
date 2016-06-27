@@ -15,7 +15,7 @@ namespace Pandorum.Samples.Stations2
         {
             Console.WriteLine("Logging in...");
             
-            PandoraHelpers.Login(async client =>
+            PandoraHelpers.Session(async client =>
             {
                 client.Settings.Endpoint = PandoraEndpoints.Tuner.HttpUri;
 
