@@ -27,7 +27,7 @@ namespace Pandorum.Stations
         public string ArtistName { get; }
         internal int Score { get; }
 
-        SeedType ISeed.SeedType => SeedType.GenreStation;
+        SeedType ISeed.SeedType => SeedType.Song;
         string IAddableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;
