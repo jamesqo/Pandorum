@@ -8,11 +8,14 @@ namespace Pandorum.Stations
 {
     public struct QuickMixStationInfo
     {
-        internal QuickMixStationInfo(string[] stationIds)
+        internal QuickMixStationInfo(IEnumerable<IStation> stations)
         {
-            StationIds = stationIds?.AsReadOnly();
+            if (stations == null)
+                throw new ArgumentNullException(nameof(stations));
+
+            Stations = stations;
         }
 
-        public IEnumerable<string> StationIds { get; }
+        public IEnumerable<IStation> Stations { get; }
     }
 }

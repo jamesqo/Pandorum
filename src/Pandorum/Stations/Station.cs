@@ -34,7 +34,9 @@ namespace Pandorum.Stations
             IsQuickMix = dto.IsQuickMix;
             RequiresCleanAds = dto.RequiresCleanAds;
             _token = dto.StationToken;
-            _quickMix = new QuickMixStationInfo(dto.QuickMixStationIds); // this is a struct, so we eagerly allocate
+
+            var stations = dto.QuickMixStationIds?.Select(id => new TokenStation(id)); // Select is lazy, so even if QuickMixStationsId isn't null this will only make 1 allocation
+            _quickMix = new QuickMixStationInfo(stations ?? ImmutableCache.EmptyArray<TokenStation>()); // this is a struct, so we eagerly allocate
         }
 
         public string Name { get; }
@@ -58,7 +60,7 @@ namespace Pandorum.Stations
                 if (!IsQuickMix)
                     throw new InvalidOperationException($"You cannot call {nameof(QuickMix)} on a station that isn't a QuickMix station.");
 
-                Debug.Assert(_quickMix.StationIds != null);
+                Debug.Assert(_quickMix.Stations != null);
                 return _quickMix;
             }
         }
