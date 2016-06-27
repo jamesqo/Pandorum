@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class GenreStationsClient : IJsonProcessor
+    public class GenreStationsClient
     {
         private readonly PandoraClient _inner;
 
@@ -23,19 +24,19 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
-        public Task<string> Checksum()
+        public async Task<string> Checksum()
         {
             var options = CreateChecksumOptions();
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetGenreStationsChecksum(options),
-                (result, _) => (string)result["checksum"]);
+            var response = await _inner._baseClient.GetGenreStationsChecksum(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return (string)result["checksum"];
         }
 
-        public Task<IEnumerable<Category>> List()
+        public async Task<IEnumerable<Category>> List()
         {
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetGenreStations(),
-                (result, _) => CreateCategories(result));
+            var response = await _inner._baseClient.GetGenreStations().ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateCategories(result);
         }
 
         private static GetGenreStationsChecksumOptions CreateChecksumOptions()

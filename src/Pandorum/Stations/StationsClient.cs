@@ -10,10 +10,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class StationsClient : IJsonProcessor
+    public class StationsClient
     {
         private readonly PandoraClient _inner;
 
@@ -30,7 +31,7 @@ namespace Pandorum.Stations
         public GenreStationsClient Genre =>
             _genre ?? (_genre = new GenreStationsClient(_inner));
         
-        public Task<IRemovableSeed> AddSeed(IStation station, IAddableSeed seed)
+        public async Task<IRemovableSeed> AddSeed(IStation station, IAddableSeed seed)
         {
             if (station == null)
                 throw new ArgumentNullException(nameof(station));
@@ -38,27 +39,27 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateAddSeedOptions(station, seed);
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.AddMusic(options),
-                (result, _) => CreateRemovableSeed(result, seed.SeedType)); // TODO: Remove closure
+            var response = await _inner._baseClient.AddMusic(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateRemovableSeed(result, seed.SeedType);
         }
 
-        public Task<string> Checksum()
+        public async Task<string> Checksum()
         {
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetStationListChecksum(),
-                (result, _) => (string)result["checksum"]);
+            var response = await _inner._baseClient.GetStationListChecksum().ConfigureAwait(false);
+            var result = GetResult(response);
+            return (string)result["checksum"];
         }
 
-        public Task<Station> Create(IAddableSeed seed)
+        public async Task<Station> Create(IAddableSeed seed)
         {
             if (seed == null)
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateCreateOptions(seed);
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.CreateStation(options),
-                (result, _) => CreateStation(result));
+            var response = await _inner._baseClient.CreateStation(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateStation(result);
         }
 
         public async Task Delete(IStation station)
@@ -70,41 +71,40 @@ namespace Pandorum.Stations
             await _inner._baseClient.DeleteStation(options).ConfigureAwait(false);
         }
 
-        public Task<ExpandedStation> ExpandInfo(IStation station)
+        public async Task<ExpandedStation> ExpandInfo(IStation station)
         {
             if (station == null)
                 throw new ArgumentNullException(nameof(station));
 
             var options = CreateExpandInfoOptions(station);
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetStation(options),
-                (result, _) => CreateExpandedStation(result));
+            var response = await _inner._baseClient.GetStation(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateExpandedStation(result);
         }
 
-        public Task<IEnumerable<Station>> List()
+        public async Task<IEnumerable<Station>> List()
         {
             var options = CreateStationListOptions();
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetStationList(options),
-                (result, _) => CreateStations(result));
+            var response = await _inner._baseClient.GetStationList(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateStations(result);
         }
 
         // out/ref have issues with async as well as lambdas,
         // so as a workaround we make the user allocate a
         // ChecksumReference on the heap and modify that
-        // TODO: Remove closure allocations from here
         // TODO: Avoid code dup with other List() overload
         // TODO: Maybe when C# 7 is released, this can return
         // Task<(IEnumerable<Station>, string)> using value tuples
-        public Task<IEnumerable<Station>> List(ChecksumReference reference)
+        public async Task<IEnumerable<Station>> List(ChecksumReference reference)
         {
             if (reference == null)
                 throw new ArgumentNullException(nameof(reference));
 
             var options = CreateStationListOptions();
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.GetStationList(options),
-                (result, _) => CreateStationsAndSetChecksum(result, reference));
+            var response = await _inner._baseClient.GetStationList(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateStationsAndSetChecksum(result, reference);
         }
 
         public async Task RemoveSeed(IRemovableSeed seed)
@@ -116,25 +116,26 @@ namespace Pandorum.Stations
             await _inner._baseClient.DeleteMusic(options).ConfigureAwait(false);
         }
 
-        public Task<Station> Rename(IStation station, string newName)
+        public async Task<Station> Rename(IStation station, string newName)
         {
             if (station == null || newName == null)
                 throw new ArgumentNullException(station == null ? nameof(station) : nameof(newName));
 
             var options = CreateRenameOptions(station, newName);
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.RenameStation(options),
-                (result, _) => CreateStation(result));
+            var response = await _inner._baseClient.RenameStation(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateStation(result);
         }
 
-        public Task<SearchResults> Search(string searchText)
+        public async Task<SearchResults> Search(string searchText)
         {
             if (searchText == null)
                 throw new ArgumentNullException(nameof(searchText));
 
-            return this.AwaitAndSelectResult(
-                _inner._baseClient.Search(CreateSearchOptions(searchText)),
-                (result, _) => CreateSearchResults(result));
+            var options = CreateSearchOptions(searchText);
+            var response = await _inner._baseClient.Search(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateSearchResults(result);
         }
 
         // Options

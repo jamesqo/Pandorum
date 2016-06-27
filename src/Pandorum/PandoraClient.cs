@@ -13,10 +13,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pandorum.Stations;
 using Pandorum.Core.Json;
+using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum
 {
-    public class PandoraClient : IJsonProcessor, IDisposable
+    public class PandoraClient : IDisposable
     {
         internal IPandoraJsonClient _baseClient;
 
@@ -62,11 +63,11 @@ namespace Pandorum
         // and have these overloads implemented as
         // extension methods.
 
-        public Task<bool> CheckLicensing()
+        public async Task<bool> CheckLicensing()
         {
-            return this.AwaitAndSelectResult(
-                _baseClient.CheckLicensing(),
-                (result, _) => (bool)result["isAllowed"]);
+            var response = await _baseClient.CheckLicensing().ConfigureAwait(false);
+            var result = GetResult(response);
+            return (bool)result["isAllowed"];
         }
 
         public async Task Login(string username, string password)
@@ -77,11 +78,12 @@ namespace Pandorum
 
         // Partner login
 
-        public Task PartnerLogin()
+        public async Task PartnerLogin()
         {
-            return this.AwaitAndSelectResult(
-                _baseClient.PartnerLogin(CreatePartnerLoginOptions()),
-                (result, self) => self.HandlePartnerLogin(result));
+            var options = CreatePartnerLoginOptions();
+            var response = await _baseClient.PartnerLogin(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            HandlePartnerLogin(result);
         }
 
         private PartnerLoginOptions CreatePartnerLoginOptions()
@@ -111,11 +113,12 @@ namespace Pandorum
 
         // User login
 
-        public Task UserLogin(string username, string password)
+        public async Task UserLogin(string username, string password)
         {
-            return this.AwaitAndSelectResult(
-                _baseClient.UserLogin(CreateUserLoginOptions(username, password)),
-                (result, self) => self.HandleUserLogin(result));
+            var options = CreateUserLoginOptions(username, password);
+            var response = await _baseClient.UserLogin(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            HandleUserLogin(result);
         }
 
         private UserLoginOptions CreateUserLoginOptions(string username, string password)
