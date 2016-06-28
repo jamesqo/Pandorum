@@ -22,7 +22,12 @@ namespace Pandorum.Samples.Stations4
 
                 Console.WriteLine("Getting extended info on QuickMix...");
                 var expanded = await client.Stations.ExpandInfo(quickMix);
-                Console.WriteLine(JsonConvert.SerializeObject(expanded));
+                Console.WriteLine(JsonConvert.SerializeObject(expanded, Formatting.Indented));
+
+                Console.WriteLine("Getting extended info on some other station...");
+                var station = list.First(s => !s.IsQuickMix);
+                expanded = await client.Stations.ExpandInfo(station);
+                Console.WriteLine(JsonConvert.SerializeObject(expanded, Formatting.Indented));
             });
         }
     }

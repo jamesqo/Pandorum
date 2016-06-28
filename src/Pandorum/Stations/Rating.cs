@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pandorum.Core.DataTransfer.Stations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,5 +8,9 @@ namespace Pandorum.Stations
 {
     public class Rating
     {
+        internal Rating(RatingDto dto)
+        {
+
+        }
     }
 }

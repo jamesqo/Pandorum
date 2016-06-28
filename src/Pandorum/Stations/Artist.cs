@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class Artist : IAddableSeed, IArtistInfo
+    public class Artist : IAddableSeed, ICreatableSeed, IArtistInfo
     {
         public struct SearchInfo
         {
@@ -42,6 +42,7 @@ namespace Pandorum.Stations
         public bool IsComposer => _musicToken[0] == 'C';
 
         SeedType ISeed.SeedType => SeedType.Artist;
+        string IAddableSeed.MusicToken => _musicToken;
         string ICreatableSeed.MusicToken => _musicToken;
 
         public override string ToString() => Name;

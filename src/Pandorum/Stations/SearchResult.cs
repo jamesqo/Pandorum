@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
+    // TODO: Implement IComparable/IEquatable?
     public struct SearchResult
     {
         internal SearchResult(string name, ICreatableSeed seed, int score)

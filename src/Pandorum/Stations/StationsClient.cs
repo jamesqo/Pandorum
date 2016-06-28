@@ -156,7 +156,7 @@ namespace Pandorum.Stations
             {
                 SearchText = searchText,
                 IncludeGenreStations = true,
-                IncludeNearMatches = true,
+                IncludeNearMatches = true
             };
         }
 

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
+    // You can't call addMusic with a genre station,
+    // so don't implement IAddableSeed
     public class Genre : ICreatableSeed, IGenreInfo
     {
         public struct SearchInfo

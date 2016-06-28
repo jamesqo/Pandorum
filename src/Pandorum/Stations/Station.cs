@@ -57,10 +57,11 @@ namespace Pandorum.Stations
         {
             get
             {
+                Debug.Assert(_quickMix.Stations != null);
+
                 if (!IsQuickMix)
                     throw new InvalidOperationException($"You cannot call {nameof(QuickMix)} on a station that isn't a QuickMix station.");
 
-                Debug.Assert(_quickMix.Stations != null);
                 return _quickMix;
             }
         }
