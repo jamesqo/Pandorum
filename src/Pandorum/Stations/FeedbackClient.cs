@@ -1,4 +1,5 @@
-﻿using Pandorum.Core.Options.Stations;
+﻿using Pandorum.Core;
+using Pandorum.Core.Options.Stations;
 using Pandorum.Stations.Core;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations
 {
-    public class FeedbackClient : IClientWrapper
+    public class FeedbackClient : IPandoraClient
     {
         private readonly PandoraClient _inner;
 
@@ -19,7 +20,7 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
-        PandoraClient IClientWrapper.InnerClient => _inner;
+        PandoraClient IPandoraClient.Inner => _inner;
 
         public async Task Remove(IRating rating)
         {

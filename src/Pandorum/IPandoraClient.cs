@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Stations.Core
+namespace Pandorum
 {
-    internal interface IClientWrapper
+    public interface IPandoraClient
     {
-        PandoraClient InnerClient { get; }
+        PandoraClient Inner { get; }
     }
 }

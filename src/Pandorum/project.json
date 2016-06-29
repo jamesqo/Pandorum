@@ -8,6 +8,7 @@
         "../Common/Core/Json/JsonSerializerSettingsExtensions.cs",
         "../Common/Core/Json/JTokenExtensions.cs",
         "../Common/Core/ListExtensions.cs",
+        "../Common/Core/Net/UriHelpers.cs",
         "../Common/Core/Time/DateTimeHelpers.cs"
       ]
     }

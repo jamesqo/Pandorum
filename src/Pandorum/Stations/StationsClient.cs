@@ -15,7 +15,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class StationsClient : IClientWrapper
+    public class StationsClient : IPandoraClient
     {
         private readonly PandoraClient _inner;
 
@@ -36,7 +36,7 @@ namespace Pandorum.Stations
         public GenresClient Genres =>
             _genres ?? (_genres = new GenresClient(_inner));
 
-        PandoraClient IClientWrapper.InnerClient => _inner;
+        PandoraClient IPandoraClient.Inner => _inner;
 
         // TODO: Maybe move AddSeed/RemoveSeed to a SeedsClient class
 

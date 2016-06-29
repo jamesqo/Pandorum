@@ -18,7 +18,7 @@ using System.Text;
 
 namespace Pandorum
 {
-    public class PandoraClient : IDisposable
+    public class PandoraClient : IPandoraClient, IDisposable
     {
         private IPandoraJsonClient _jsonClient;
 
@@ -55,6 +55,9 @@ namespace Pandorum
 
         // So other clients can access the JSON client
         internal IPandoraJsonClient JsonClient => _jsonClient;
+
+        // IPandoraClient interface implementation
+        PandoraClient IPandoraClient.Inner => this; // we are the inner client
 
         // Entry point for other clients
 

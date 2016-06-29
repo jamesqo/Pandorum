@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pandorum.Core;
 using Pandorum.Core.DataTransfer.Stations;
 using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
@@ -13,7 +14,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class GenresClient : IClientWrapper
+    public class GenresClient : IPandoraClient
     {
         private readonly PandoraClient _inner;
 
@@ -25,7 +26,7 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
-        PandoraClient IClientWrapper.InnerClient => _inner;
+        PandoraClient IPandoraClient.Inner => _inner;
 
         public async Task<string> Checksum()
         {
