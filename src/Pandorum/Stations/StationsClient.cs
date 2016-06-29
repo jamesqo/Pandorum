@@ -38,6 +38,8 @@ namespace Pandorum.Stations
 
         PandoraClient IClientWrapper.InnerClient => _inner;
 
+        // TODO: Maybe move AddSeed/RemoveSeed to a SeedsClient class
+
         // TODO: Expose other AddSeed overloads, which return more information
         // based on the type given. Example:
         // Task<AddedArtist> AddSeed(IStation station, Artist artist)
@@ -155,6 +157,21 @@ namespace Pandorum.Stations
             return CreateSearchResults(result);
         }
 
+        public async Task Share(IStation station, IEnumerable<string> emails)
+        {
+            if (station == null || emails == null)
+                throw new ArgumentNullException(station == null ? nameof(station) : nameof(emails));
+
+            var options = CreateShareOptions(station, emails);
+            await this.JsonClient().ShareStation(options).ConfigureAwait(false);
+        }
+
+        public Task Share(IStation station, params string[] emails)
+        {
+            // The other overload will validate the arguments
+            return Share(station, emails.AsEnumerable()); // no need for emails?.AsEnumerable() here, that method doesn't check for null
+        }
+
         // Options
 
         private static SearchOptions CreateSearchOptions(string searchText)
@@ -223,6 +240,28 @@ namespace Pandorum.Stations
         private static DeleteMusicOptions CreateRemoveSeedOptions(IRemovableSeed seed)
         {
             return new DeleteMusicOptions { SeedId = seed.SeedId };
+        }
+
+        private static ShareStationOptions CreateShareOptions(IStation station, IEnumerable<string> emails)
+        {
+            // Perform a defensive copy via ToArray, in case
+            // for some bizarre reason the type of emails is
+            // tagged with [JsonObject] and does not result
+            // in an array when the options are serialized to
+            // JSON
+
+            var copy = emails.ToArray();
+
+            // TODO: Maybe IStation should have separate StationId
+            // and StationToken properties, we shouldn't assume they're
+            // always going to be the same
+
+            return new ShareStationOptions
+            {
+                Emails = copy,
+                StationId = station.Token,
+                StationToken = station.Token
+            };
         }
 
         // Result processing
