@@ -25,7 +25,7 @@ namespace Pandorum.Samples.Stations4
                 Console.WriteLine(JsonConvert.SerializeObject(expanded, Formatting.Indented));
 
                 Console.WriteLine("Getting extended info on some other station...");
-                var station = list.First(s => !s.IsQuickMix);
+                var station = list.FirstOrDefault(s => s.Name == "The Hills Radio") ?? list.First(s => !s.IsQuickMix);
                 expanded = await client.Stations.ExpandInfo(station);
                 Console.WriteLine(JsonConvert.SerializeObject(expanded, Formatting.Indented));
             });
