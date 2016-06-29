@@ -92,6 +92,7 @@ namespace Pandorum
 
         private PartnerLoginOptions CreatePartnerLoginOptions()
         {
+            // TODO: Investigate adding other options
             return new PartnerLoginOptions
             {
                 Username = Settings.PartnerInfo.Username,
@@ -127,6 +128,7 @@ namespace Pandorum
 
         private UserLoginOptions CreateUserLoginOptions(string username, string password)
         {
+            // TODO: Investigate adding other options
             return new UserLoginOptions
             {
                 LoginType = "user",
