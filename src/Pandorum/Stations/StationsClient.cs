@@ -172,6 +172,17 @@ namespace Pandorum.Stations
             return Share(station, emails.AsEnumerable()); // no need for emails?.AsEnumerable() here, that method doesn't check for null
         }
 
+        public async Task<Station> TransformShared(IStation station)
+        {
+            if (station == null)
+                throw new ArgumentNullException(nameof(station));
+
+            var options = CreateTransformOptions(station);
+            var response = await this.JsonClient().TransformSharedStation(options).ConfigureAwait(false);
+            var result = GetResult(response);
+            return CreateStation(result);
+        }
+
         // Options
 
         private static SearchOptions CreateSearchOptions(string searchText)
@@ -260,6 +271,14 @@ namespace Pandorum.Stations
             {
                 Emails = copy,
                 StationId = station.Token,
+                StationToken = station.Token
+            };
+        }
+
+        private static TransformSharedStationOptions CreateTransformOptions(IStation station)
+        {
+            return new TransformSharedStationOptions
+            {
                 StationToken = station.Token
             };
         }
