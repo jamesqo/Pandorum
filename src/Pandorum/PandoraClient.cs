@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Pandorum.Stations;
 using Pandorum.Core.Json;
 using static Pandorum.Core.Json.JsonHelpers;
+using System.Text;
 
 namespace Pandorum
 {
@@ -147,10 +148,25 @@ namespace Pandorum
 
         private long DecryptSyncTime(string input)
         {
-            var decryptedString = BlowfishEcb.DecryptHexToString(input, Settings.PartnerInfo.DecryptPassword);
-            decryptedString = decryptedString.Substring(4); // skip first four bytes of garbage
-            return long.Parse(decryptedString.Replace("\u0002", string.Empty)); // TODO: Can other control chars appear at the end?
-            // Maybe it should just be decryptedString.Substring(4, 10) instead
+            // NOTE: The first 4 bytes in the decrypted byte[] are garbage.
+            // Unfortunately, we can't just call
+            // BlowfishEcb.DecryptHexToString(...).Substring(4) to skip those
+            // bytes, since in UTF-8 multiple bytes can represent 1 char,
+            // and the first four bytes might represent less than 4 chars,
+            // and then we might end up skipping some of the data we actually want.
+
+            // Instead, call DecryptHexToBytes/Encoding.UTF8.GetString manually here.
+
+            var key = Settings.PartnerInfo.DecryptPassword;
+            var keyBytes = Encoding.UTF8.GetBytes(key); // TODO: May want to pool/do a copy-on-write thing for this
+
+            int decryptedCount;
+            using (var lease = BlowfishEcb.DecryptHexToBytes(input, keyBytes, out decryptedCount))
+            {
+                var decryptedString = Encoding.UTF8.GetString(lease.Array, 4, decryptedCount - 4); // skip first four bytes of garbage when decoding
+                return long.Parse(decryptedString.Replace("\u0002", string.Empty)); // TODO: Can other control chars appear at the end?
+                // Maybe it should just be decryptedString.Substring(4, 10) instead
+            }
         }
         
         // Dispose logic
