@@ -19,7 +19,7 @@ namespace Pandorum
 {
     public class PandoraClient : IDisposable
     {
-        internal IPandoraJsonClient _baseClient;
+        private IPandoraJsonClient _jsonClient;
 
         private StationsClient _stations;
 
@@ -42,7 +42,7 @@ namespace Pandorum
             if (baseClient == null)
                 throw new ArgumentNullException(nameof(baseClient));
 
-            _baseClient = baseClient;
+            _jsonClient = baseClient;
             Settings = new PandoraClientSettings(baseClient.Settings)
             {
                 Endpoint = endpoint,
@@ -51,6 +51,9 @@ namespace Pandorum
         }
 
         public PandoraClientSettings Settings { get; }
+
+        // So other clients can access the JSON client
+        internal IPandoraJsonClient JsonClient => _jsonClient;
 
         // Entry point for other clients
 
@@ -65,7 +68,7 @@ namespace Pandorum
 
         public async Task<bool> CheckLicensing()
         {
-            var response = await _baseClient.CheckLicensing().ConfigureAwait(false);
+            var response = await _jsonClient.CheckLicensing().ConfigureAwait(false);
             var result = GetResult(response);
             return (bool)result["isAllowed"];
         }
@@ -81,7 +84,7 @@ namespace Pandorum
         public async Task PartnerLogin()
         {
             var options = CreatePartnerLoginOptions();
-            var response = await _baseClient.PartnerLogin(options).ConfigureAwait(false);
+            var response = await _jsonClient.PartnerLogin(options).ConfigureAwait(false);
             var result = GetResult(response);
             HandlePartnerLogin(result);
         }
@@ -104,11 +107,11 @@ namespace Pandorum
             // current Unix time, and set the SyncTimestamp
             var syncTime = (string)result["syncTime"];
             var parsedTimestamp = DateTimeOffset.UtcNow.ToUnixTime() - DecryptSyncTime(syncTime);
-            _baseClient.Settings.SyncTimestamp = parsedTimestamp;
+            _jsonClient.Settings.SyncTimestamp = parsedTimestamp;
 
             // Set partner_id, auth_token
-            _baseClient.Settings.AuthToken = (string)result["partnerAuthToken"];
-            _baseClient.Settings.PartnerId = (string)result["partnerId"];
+            _jsonClient.Settings.AuthToken = (string)result["partnerAuthToken"];
+            _jsonClient.Settings.PartnerId = (string)result["partnerId"];
         }
 
         // User login
@@ -116,7 +119,7 @@ namespace Pandorum
         public async Task UserLogin(string username, string password)
         {
             var options = CreateUserLoginOptions(username, password);
-            var response = await _baseClient.UserLogin(options).ConfigureAwait(false);
+            var response = await _jsonClient.UserLogin(options).ConfigureAwait(false);
             var result = GetResult(response);
             HandleUserLogin(result);
         }
@@ -128,7 +131,7 @@ namespace Pandorum
                 LoginType = "user",
                 Username = username,
                 Password = password,
-                PartnerAuthToken = _baseClient.Settings.AuthToken
+                PartnerAuthToken = _jsonClient.Settings.AuthToken
                 // TODO: ReturnCapped = true
             };
         }
@@ -136,8 +139,8 @@ namespace Pandorum
         private void HandleUserLogin(JToken result)
         {
             // Overwrite the partnerAuthToken with userAuthToken
-            _baseClient.Settings.AuthToken = (string)result["userAuthToken"];
-            _baseClient.Settings.UserId = (string)result["userId"];
+            _jsonClient.Settings.AuthToken = (string)result["userAuthToken"];
+            _jsonClient.Settings.UserId = (string)result["userId"];
         }
 
         // Helpers
@@ -158,10 +161,10 @@ namespace Pandorum
         {
             if (disposing)
             {
-                if (_baseClient != null)
+                if (_jsonClient != null)
                 {
-                    _baseClient.Dispose();
-                    _baseClient = null;
+                    _jsonClient.Dispose();
+                    _jsonClient = null;
                 }
             }
         }

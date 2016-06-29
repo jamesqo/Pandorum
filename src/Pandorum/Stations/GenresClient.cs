@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Pandorum.Core.DataTransfer.Stations;
 using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
+using Pandorum.Stations.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class GenresClient
+    public class GenresClient : IPandoraClientWrapper
     {
         private readonly PandoraClient _inner;
 
@@ -24,17 +25,19 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
+        PandoraClient IPandoraClientWrapper.InnerClient => _inner;
+
         public async Task<string> Checksum()
         {
             var options = CreateChecksumOptions();
-            var response = await _inner._baseClient.GetGenreStationsChecksum(options).ConfigureAwait(false);
+            var response = await this.JsonClient().GetGenreStationsChecksum(options).ConfigureAwait(false);
             var result = GetResult(response);
             return (string)result["checksum"];
         }
 
         public async Task<IEnumerable<Category>> List()
         {
-            var response = await _inner._baseClient.GetGenreStations().ConfigureAwait(false);
+            var response = await this.JsonClient().GetGenreStations().ConfigureAwait(false);
             var result = GetResult(response);
             return CreateCategories(result);
         }

@@ -5,6 +5,7 @@ using Pandorum.Core;
 using Pandorum.Core.DataTransfer.Stations;
 using Pandorum.Core.Json;
 using Pandorum.Core.Options.Stations;
+using Pandorum.Stations.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class StationsClient
+    public class StationsClient : IPandoraClientWrapper
     {
         private readonly PandoraClient _inner;
 
@@ -30,6 +31,8 @@ namespace Pandorum.Stations
 
         public GenresClient Genres =>
             _genres ?? (_genres = new GenresClient(_inner));
+
+        PandoraClient IPandoraClientWrapper.InnerClient => _inner;
 
         // TODO: Expose other AddSeed overloads, which return more information
         // based on the type given. Example:
@@ -48,14 +51,14 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateAddSeedOptions(station, seed);
-            var response = await _inner._baseClient.AddMusic(options).ConfigureAwait(false);
+            var response = await this.JsonClient().AddMusic(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateRemovableSeed(result, seed.SeedType);
         }
 
         public async Task<string> Checksum()
         {
-            var response = await _inner._baseClient.GetStationListChecksum().ConfigureAwait(false);
+            var response = await this.JsonClient().GetStationListChecksum().ConfigureAwait(false);
             var result = GetResult(response);
             return (string)result["checksum"];
         }
@@ -66,7 +69,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateCreateOptions(seed);
-            var response = await _inner._baseClient.CreateStation(options).ConfigureAwait(false);
+            var response = await this.JsonClient().CreateStation(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateStation(result);
         }
@@ -77,7 +80,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(station));
 
             var options = CreateDeleteOptions(station);
-            await _inner._baseClient.DeleteStation(options).ConfigureAwait(false);
+            await this.JsonClient().DeleteStation(options).ConfigureAwait(false);
         }
 
         public async Task<ExpandedStation> ExpandInfo(IStation station)
@@ -86,7 +89,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(station));
 
             var options = CreateExpandInfoOptions(station);
-            var response = await _inner._baseClient.GetStation(options).ConfigureAwait(false);
+            var response = await this.JsonClient().GetStation(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateExpandedStation(result);
         }
@@ -94,7 +97,7 @@ namespace Pandorum.Stations
         public async Task<IEnumerable<Station>> List()
         {
             var options = CreateStationListOptions();
-            var response = await _inner._baseClient.GetStationList(options).ConfigureAwait(false);
+            var response = await this.JsonClient().GetStationList(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateStations(result);
         }
@@ -111,7 +114,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(reference));
 
             var options = CreateStationListOptions();
-            var response = await _inner._baseClient.GetStationList(options).ConfigureAwait(false);
+            var response = await this.JsonClient().GetStationList(options).ConfigureAwait(false);
             var result = GetResult(response);
             reference.Checksum = (string)result["checksum"];
             return CreateStations(result);
@@ -123,7 +126,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(seed));
 
             var options = CreateRemoveSeedOptions(seed);
-            await _inner._baseClient.DeleteMusic(options).ConfigureAwait(false);
+            await this.JsonClient().DeleteMusic(options).ConfigureAwait(false);
         }
 
         public async Task<Station> Rename(IStation station, string newName)
@@ -132,7 +135,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(station == null ? nameof(station) : nameof(newName));
 
             var options = CreateRenameOptions(station, newName);
-            var response = await _inner._baseClient.RenameStation(options).ConfigureAwait(false);
+            var response = await this.JsonClient().RenameStation(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateStation(result);
         }
@@ -143,7 +146,7 @@ namespace Pandorum.Stations
                 throw new ArgumentNullException(nameof(searchText));
 
             var options = CreateSearchOptions(searchText);
-            var response = await _inner._baseClient.Search(options).ConfigureAwait(false);
+            var response = await this.JsonClient().Search(options).ConfigureAwait(false);
             var result = GetResult(response);
             return CreateSearchResults(result);
         }
