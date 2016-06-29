@@ -255,7 +255,7 @@ namespace Pandorum.Stations
             return new ExpandedStation(dto);
         }
 
-        private IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
+        private static IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
         {
             // TODO: Return different types depending on the SeedType
 
