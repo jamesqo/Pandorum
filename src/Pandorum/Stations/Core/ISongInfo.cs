@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pandorum.Stations
+namespace Pandorum.Stations.Core
 {
-    // TODO: bool IsComposer { get; }
-
-    internal interface IArtistInfo
+    internal interface ISongInfo
     {
         string Name { get; }
+        string ArtistName { get; }
     }
 }
