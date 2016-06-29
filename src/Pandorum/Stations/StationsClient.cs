@@ -157,6 +157,26 @@ namespace Pandorum.Stations
             return CreateSearchResults(result);
         }
 
+        // TODO: Maybe this should be QuickMix.Set{Stations} instead,
+        // where QuickMix is a property of type QuickMixClient
+        
+        public async Task SetQuickMix(IEnumerable<IStation> stations)
+        {
+            if (stations == null)
+                throw new ArgumentNullException(nameof(stations));
+
+            var options = CreateQuickMixOptions(stations);
+            await this.JsonClient().SetQuickMix(options).ConfigureAwait(false);
+        }
+
+        public Task SetQuickMix(params IStation[] stations)
+        {
+            // Other overload should validate args
+            // AsEnumerable is an extension method, so
+            // this won't null ref
+            return SetQuickMix(stations.AsEnumerable());
+        }
+
         public async Task Share(IStation station, IEnumerable<string> emails)
         {
             if (station == null || emails == null)
@@ -280,6 +300,14 @@ namespace Pandorum.Stations
             return new TransformSharedStationOptions
             {
                 StationToken = station.Token
+            };
+        }
+
+        private static SetQuickMixOptions CreateQuickMixOptions(IEnumerable<IStation> stations)
+        {
+            return new SetQuickMixOptions
+            {
+                QuickMixStationIds = stations.Select(s => s.Token)
             };
         }
 
