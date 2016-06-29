@@ -10,6 +10,8 @@ namespace Pandorum.Core.Cryptography.Tests
 {
     public class BlowfishEcbTests
     {
+        // TODO: Add test coverage for DecryptHexToBytes
+
         [Theory]
         [MemberData(nameof(EncryptDecryptData))]
         public void StringDecryption(string plaintext, string key, string ciphertext)
