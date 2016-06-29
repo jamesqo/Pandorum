@@ -19,6 +19,7 @@ namespace Pandorum.Stations
     {
         private readonly PandoraClient _inner;
 
+        private FeedbackClient _feedback;
         private GenresClient _genres;
 
         internal StationsClient(PandoraClient inner)
@@ -28,6 +29,9 @@ namespace Pandorum.Stations
 
             _inner = inner;
         }
+
+        public FeedbackClient Feedback =>
+            _feedback ?? (_feedback = new FeedbackClient(_inner));
 
         public GenresClient Genres =>
             _genres ?? (_genres = new GenresClient(_inner));
