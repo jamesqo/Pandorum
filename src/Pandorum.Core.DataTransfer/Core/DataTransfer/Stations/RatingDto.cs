@@ -9,6 +9,7 @@ namespace Pandorum.Core.DataTransfer.Stations
     {
         public DateTimeOffsetDto DateCreated { get; set; }
         public string AlbumArtUrl { get; set; }
+        public string SongIdentity { get; set; }
         public string MusicToken { get; set; }
         public string SongName { get; set; }
         public string ArtistName { get; set; }
