@@ -7,6 +7,7 @@ using Pandorum.Core;
 
 namespace Pandorum.Stations
 {
+    // TODO: Should implement IEnumerable<StationSeed>, where StationSeed : IRemovableSeed
     public class StationSeeds
     {
         internal StationSeeds(StationSeedsDto dto)
