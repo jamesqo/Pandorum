@@ -15,7 +15,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class StationsClient : IPandoraClientWrapper
+    public class StationsClient : IClientWrapper
     {
         private readonly PandoraClient _inner;
 
@@ -32,7 +32,7 @@ namespace Pandorum.Stations
         public GenresClient Genres =>
             _genres ?? (_genres = new GenresClient(_inner));
 
-        PandoraClient IPandoraClientWrapper.InnerClient => _inner;
+        PandoraClient IClientWrapper.InnerClient => _inner;
 
         // TODO: Expose other AddSeed overloads, which return more information
         // based on the type given. Example:

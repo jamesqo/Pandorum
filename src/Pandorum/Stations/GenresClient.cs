@@ -13,7 +13,7 @@ using static Pandorum.Core.Json.JsonHelpers;
 
 namespace Pandorum.Stations
 {
-    public class GenresClient : IPandoraClientWrapper
+    public class GenresClient : IClientWrapper
     {
         private readonly PandoraClient _inner;
 
@@ -25,7 +25,7 @@ namespace Pandorum.Stations
             _inner = inner;
         }
 
-        PandoraClient IPandoraClientWrapper.InnerClient => _inner;
+        PandoraClient IClientWrapper.InnerClient => _inner;
 
         public async Task<string> Checksum()
         {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations.Core
 {
-    internal interface IPandoraClientWrapper
+    internal interface IClientWrapper
     {
         PandoraClient InnerClient { get; }
     }

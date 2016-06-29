@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Pandorum.Stations.Core
 {
-    internal static class PandoraClientWrapperExtensions
+    internal static class ClientWrapperExtensions
     {
-        public static IPandoraJsonClient JsonClient(this IPandoraClientWrapper wrapper)
+        public static IPandoraJsonClient JsonClient(this IClientWrapper wrapper)
         {
             return wrapper.InnerClient.JsonClient;
         }
