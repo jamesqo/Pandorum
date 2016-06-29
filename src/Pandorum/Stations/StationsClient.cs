@@ -255,13 +255,14 @@ namespace Pandorum.Stations
             return new ExpandedStation(dto);
         }
 
-        private static IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
+        private IRemovableSeed CreateRemovableSeed(JToken result, SeedType type)
         {
             // TODO: Return different types depending on the SeedType
-            // TODO: Should there be a DTO for this? No, right?
 
-            string seedId = (string)result["seedId"];
-            return new RemovableSeed(seedId, type);
+            var settings = new JsonSerializerSettings().WithCamelCase();
+            var serializer = settings.ToSerializer();
+            var dto = result.ToObject<RemovableSeedDto>(serializer);
+            return new RemovableSeed(dto, type);
         }
     }
 }

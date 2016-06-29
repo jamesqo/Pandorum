@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pandorum.Core.DataTransfer.Stations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +8,12 @@ namespace Pandorum.Stations
 {
     internal class RemovableSeed : IRemovableSeed
     {
-        public RemovableSeed(string seedId, SeedType seedType)
+        public RemovableSeed(RemovableSeedDto dto, SeedType seedType)
         {
-            if (seedId == null)
-                throw new ArgumentNullException(nameof(seedId));
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
 
-            SeedId = seedId;
+            SeedId = dto.SeedId;
             SeedType = seedType;
         }
 
