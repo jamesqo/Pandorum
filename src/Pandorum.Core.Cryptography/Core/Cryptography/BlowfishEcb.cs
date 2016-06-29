@@ -68,16 +68,13 @@ namespace Pandorum.Core.Cryptography
             return lease;
         }
 
-        // TODO: Maybe public DecryptBytesToString here?
-
-        public static string DecryptHexToString(string ciphertext, string key)
+        public static ArrayLease<byte> DecryptHexToBytes(string ciphertext, byte[] key, out int count)
         {
-            return DecryptHexToString(ciphertext, key, Encoding.UTF8);
+            return DecryptHexToBytes(ciphertext, new ArraySegment<byte>(key), out count);
         }
 
-        public static string DecryptHexToString(string ciphertext, string key, Encoding encoding)
+        public static ArrayLease<byte> DecryptHexToBytes(string ciphertext, ArraySegment<byte> key, out int count)
         {
-            // First translate the ciphertext from hex -> byte array
             // Throw if the string isn't divisible by 2, since bytes are 2 hex digits
             if ((ciphertext.Length & 1) != 0) // ciphertext.Length % 2 != 0
             {
@@ -108,17 +105,27 @@ namespace Pandorum.Core.Cryptography
 
                 // Now call DecryptBytes with the key/encrypted buffer
                 var encryptedBytes = new ArraySegment<byte>(rented, 0, bufferLength);
-                var keyBytes = new ArraySegment<byte>(encoding.GetBytes(key)); // TODO: Pool/memoize this?
-
-                int decryptedCount;
-                using (var lease = DecryptBytes(encryptedBytes, keyBytes, out decryptedCount))
-                {
-                    return encoding.GetString(lease.Array, 0, decryptedCount);
-                }
+                return DecryptBytes(encryptedBytes, key, out count);
             }
             finally
             {
                 ArrayPool<byte>.Shared.Return(rented);
+            }
+        }
+
+        public static string DecryptHexToString(string ciphertext, string key)
+        {
+            return DecryptHexToString(ciphertext, key, Encoding.UTF8);
+        }
+
+        public static string DecryptHexToString(string ciphertext, string key, Encoding encoding)
+        {
+            var keyBytes = encoding.GetBytes(key); // TODO: Pool/memoize this?
+
+            int decryptedCount;
+            using (var lease = DecryptHexToBytes(ciphertext, keyBytes, out decryptedCount))
+            {
+                return encoding.GetString(lease.Array, 0, decryptedCount);
             }
         }
 
