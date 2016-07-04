@@ -7,6 +7,6 @@ namespace Pandorum.Stations
 {
     public interface IStation
     {
-        string Token { get; }
+        string Token { get; } // TODO: Should this be StationToken?
     }
 }
