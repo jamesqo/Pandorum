@@ -18,6 +18,9 @@ namespace Pandorum.Tracks
             // if (encoding < AudioEncoding.Min || encoding > AudioEncoding.Max)
             // but then we'd have remember to update this type everytime a new
             // encoding was added.
+            // Maybe AudioEncoding should actually define Min/Max, and it'd
+            // be AudioEncoding's job to update it whenever a new value was
+            // added?
             Debug.Assert(Enum.IsDefined(typeof(AudioEncoding), encoding));
             Debug.Assert(Enum.IsDefined(typeof(Protocol), protocol));
 
